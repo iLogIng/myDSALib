@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Release/myDSALib_main.exe"
+			"path" : "RelWithDebInfo/myDSALib_main.exe"
 		},
 		{
-			"path" : "Release/myDSALib_main.pdb"
+			"path" : "RelWithDebInfo/myDSALib_main.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -45,7 +45,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O2 /Ob2 /DNDEBUG"
+					"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG"
 				}
 			],
 			"includes" : 
@@ -73,11 +73,11 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
-		},
-		{
 			"backtrace" : 2,
 			"id" : "DSALib::@f17a018a7758f030bcb2"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "myDSALib_main::@6890427a1f51a3e7e1df",
@@ -86,11 +86,11 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O2 /Ob2 /DNDEBUG",
+				"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:X86 /INCREMENTAL:NO",
+				"fragment" : "/machine:X86 /debug /INCREMENTAL",
 				"role" : "flags"
 			},
 			{
@@ -99,7 +99,7 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "DSALib\\Release\\DSALib.lib",
+				"fragment" : "DSALib\\RelWithDebInfo\\DSALib.lib",
 				"role" : "libraries"
 			},
 			{
