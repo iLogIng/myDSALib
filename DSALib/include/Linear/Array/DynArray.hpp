@@ -232,6 +232,27 @@ public:
 
 };
 
+template<typename Ty>
+void swap(DynArray<Ty>& left, DynArray<Ty>& right) {
+    left.swap(right);
+}
+
+template<typename Ty>
+bool operator==(const DynArray<Ty>& left, const DynArray<Ty>& right) {
+    if(left.getSize() != right.getSize())
+        return false;
+    for(size_t i = 0; i < left.getSize(); ++i) {
+        if(left[i] != right[i])
+            return false;
+    }
+    return true;
+}
+
+template<typename Ty>
+bool operator!=(const DynArray<Ty>& left, const DynArray<Ty>& right) {
+    return !(left == right);
+}
+
 }
 }
 
