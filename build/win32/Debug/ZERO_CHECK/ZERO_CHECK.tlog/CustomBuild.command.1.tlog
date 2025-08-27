@@ -1,0 +1,10 @@
+^D:\CODEFILE\PROJECTS\MYLIBPROJ\MYDSALIB\BUILD\CMAKEFILES\69E3404B45B5D723F988D3D6A035E66F\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/CodeFile/Projects/myLibProj/myDSALib -BD:/CodeFile/Projects/myLibProj/myDSALib/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/CodeFile/Projects/myLibProj/myDSALib/build/myDSALib.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"D:/CodeFile/Projects/myLibProj/myDSALib/build/cmake_install.cmake",
+		"D:/CodeFile/Projects/myLibProj/myDSALib/build/DSALib/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
