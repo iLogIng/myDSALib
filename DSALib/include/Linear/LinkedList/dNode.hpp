@@ -13,9 +13,9 @@ class dNode
 {
     using pdNode = dNode<Ty>*;
 private:
+    dNode<Ty>* next;
+    dNode<Ty>* prev;
     Ty data;
-    pdNode next;
-    pdNode prev;
 public:
     explicit dNode(const Ty &d = Ty{})
         : data(d), next(nullptr), prev(nullptr) { }
@@ -38,42 +38,30 @@ public:
 
     const pdNode stepNext(size_t step) const {
         pdNode temp = this;
-        for(size_t i = 0; i < step; ++i) {
-            if(temp->hasNext())
-                temp = temp->Next();
-            else
-                break;
+        for(size_t i = 0; i < step && temp->hasNext(); ++i) {
+            temp = temp->Next();
         }
         return temp;
     }
     pdNode stepNext(size_t step) {
         pdNode temp = this;
-        for(size_t i = 0; i < step; ++i) {
-            if(temp->hasNext())
-                temp = temp->Next();
-            else
-                break;
+        for(size_t i = 0; i < step && temp->hasNext(); ++i) {
+            temp = temp->Next();
         }
         return temp;
     }
 
     const pdNode stepPrev(size_t step) const {
         pdNode temp = this;
-        for(size_t i = 0; i < step; ++i) {
-            if(temp->hasPrev())
-                temp = temp->Prev();
-            else
-                break;
+        for(size_t i = 0; i < step && temp->hasPrev(); ++i) {
+            temp = temp->Next()
         }
         return temp;
     }
     pdNode stepPrev(size_t step) {
         pdNode temp = this;
-        for(size_t i = 0; i < step; ++i) {
-            if(temp->hasPrev())
-                temp = temp->Prev();
-            else
-                break;
+        for(size_t i = 0; i < step && temp->hasPrev(); ++i) {
+            temp = temp->Next();
         }
         return temp;
     }

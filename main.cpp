@@ -167,5 +167,9 @@ void DSALib_Linear_SigList_test() {
         node = node->Next();
     }
 
+    SigList<int> test(std::move(list));
+    list.tailInsert(makeSigNode<int>(996));
+    node = list.getRoot();
+    std::cout << node->getData() << std::endl;
 
 }

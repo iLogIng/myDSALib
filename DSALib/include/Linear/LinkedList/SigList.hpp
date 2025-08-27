@@ -12,15 +12,19 @@ class SigList
     using psNode = sNode<Ty>*;
 private:
     sNode<Ty>* head; // 头结点
+    void creatHead() {
+        if(!hasHead())
+            head = new sNode<Ty>(Ty{});
+    }
 public:
-    SigList()
+    explicit SigList()
         : head(new sNode<Ty>{}) { }
-    SigList(sNode<Ty>* root)
+    explicit SigList(sNode<Ty>* root)
         : SigList()
     {
         head->setNext(root);
     }
-    SigList(SigList<Ty>&& other)
+    explicit SigList(SigList<Ty>&& other)
         : head(other.head)
     {
         other.head = nullptr;
@@ -40,14 +44,20 @@ public:
     SigList& operator=(const SigList&) = delete;
 
 public:
+    bool hasList() {
+        return head && head->Next();
+    }
+    bool hasHead() {
+        return head != nullptr;
+    }
+
     psNode getRoot() {
+        if(!hasList())
+            return nullptr;
         return head->Next();
     }
-    void setRoot(psNode node) {
-        head->setNext(node);
-    }
     psNode getLast() {
-        if(!head || !head->Next())
+        if(!hasList())
             return nullptr;
         if(hasCircle())
             return nullptr;
@@ -59,15 +69,28 @@ public:
     }
 
     void headInsert(psNode node) {
+        if(!hasHead())
+            head = new sNode<Ty>(Ty{});
         node->setNext(head->Next());
         head->insertNext(node);
     }
 
     void tailInsert(psNode node) {
+        if(!head)
+            head = new sNode<Ty>(Ty{});
+        if(!getRoot()) {
+            head->insertNext(node);
+        }
         psNode temp = getRoot();
         while(temp->hasNext())
             temp = temp->Next();
         temp->insertNext(node);
+    }
+
+    void repair() {
+        if(hasList())
+            return;
+        creatHead();
     }
 
     psNode findNode(Ty value) {
@@ -109,8 +132,6 @@ public:
         head->setNext(pre);
         return true;
     }
-
-
 
 };
 

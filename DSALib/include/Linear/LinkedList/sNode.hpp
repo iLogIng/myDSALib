@@ -13,8 +13,8 @@ class sNode
 {
     using psNode = sNode<Ty>*;
 private:
+    sNode<Ty>* next;
     Ty data;
-    psNode next;
 public:
     explicit sNode(const Ty &d = Ty{})
         : data(d), next(nullptr) { }
@@ -46,7 +46,7 @@ public:
     psNode stepNext(size_t step) {
         psNode temp = this;
         for(size_t i = 0; i < step && temp->hasNext(); ++i) {
-            temp = temp->next;
+            temp = temp->Next();
         }
         return temp;
     }
