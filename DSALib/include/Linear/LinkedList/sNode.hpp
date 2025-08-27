@@ -33,7 +33,25 @@ public:
     const psNode Next() const { return next; }
     psNode Next() { return next; }
 
-    void setNext(const psNode& node) { next = node; }
+    const psNode stepNext(size_t step) const {
+        psNode temp = this;
+        for(size_t i = 0; i < step; ++i) {
+            if(hasNext())
+                temp = temp->next;
+            else
+                break;
+        }
+        return temp;
+    }
+    psNode stepNext(size_t step) {
+        psNode temp = this;
+        for(size_t i = 0; i < step && temp->hasNext(); ++i) {
+            temp = temp->next;
+        }
+        return temp;
+    }
+
+    void setNext(psNode node) { next = node; }
 
     void setData(const Ty& d) { data = d; }
     const Ty& getData() const { return data; }
@@ -58,6 +76,11 @@ public:
     bool hasNext() const { return next != nullptr; }
 
 };
+
+template<typename Ty, typename... Args>
+sNode<Ty>* makeSigNode(Args&&... args) {
+    return new sNode<Ty>(std::forward<Args>(args)...);
+}
 
 }
 }

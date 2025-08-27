@@ -36,6 +36,48 @@ public:
     const pdNode Prev() const { return prev; }
     pdNode Prev() { return prev; }
 
+    const pdNode stepNext(size_t step) const {
+        pdNode temp = this;
+        for(size_t i = 0; i < step; ++i) {
+            if(temp->hasNext())
+                temp = temp->Next();
+            else
+                break;
+        }
+        return temp;
+    }
+    pdNode stepNext(size_t step) {
+        pdNode temp = this;
+        for(size_t i = 0; i < step; ++i) {
+            if(temp->hasNext())
+                temp = temp->Next();
+            else
+                break;
+        }
+        return temp;
+    }
+
+    const pdNode stepPrev(size_t step) const {
+        pdNode temp = this;
+        for(size_t i = 0; i < step; ++i) {
+            if(temp->hasPrev())
+                temp = temp->Prev();
+            else
+                break;
+        }
+        return temp;
+    }
+    pdNode stepPrev(size_t step) {
+        pdNode temp = this;
+        for(size_t i = 0; i < step; ++i) {
+            if(temp->hasPrev())
+                temp = temp->Prev();
+            else
+                break;
+        }
+        return temp;
+    }
+
     void setPrev(const pdNode& node) { prev = node; }
     void setNext(const pdNode& node) { next = node; }
 
@@ -101,6 +143,11 @@ public:
     bool isLinked() const { return prev != nullptr || next != nullptr; }
 
 };
+
+template<typename Ty, typename... Args>
+dNode<Ty>* makeDouNode(Args&&... args) {
+    return new dNode<Ty>(std::forward<Args>(args)...);
+}
 
 }
 }

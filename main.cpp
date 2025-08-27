@@ -3,11 +3,13 @@
 #include "DSALib/include/Linear/LinkedList/dNode.hpp"
 #include "DSALib/include/Linear/Array/StaArray.hpp"
 #include "DSALib/include/Linear/Array/DynArray.hpp"
+#include "DSALib/include/Linear/LinkedList/SigList.hpp"
 
 void DSALib_Linear_sNode_test();
 void DSALib_Linear_dNode_test();
 void DSALib_Linear_StaArray_test();
 void DSALib_Linear_DynArray_test();
+void DSALib_Linear_SigList_test();
 
 int main()
 {
@@ -16,7 +18,8 @@ int main()
     // DSALib_Linear_sNode_test();
     // DSALib_Linear_dNode_test();
     // DSALib_Linear_StaArray_test();
-    DSALib_Linear_DynArray_test();
+    // DSALib_Linear_DynArray_test();
+     DSALib_Linear_SigList_test();
 
     return 0;
 }
@@ -57,6 +60,9 @@ void DSALib_Linear_sNode_test() {
         delete root->removeNext();
     std::cout << root->hasNext() << std::endl;
 
+    auto node = makeSigNode<int>(100, nullptr);
+    std::cout << node->getData() << std::endl;
+
     return;
 }
 
@@ -91,6 +97,9 @@ void DSALib_Linear_dNode_test() {
         std::cout << "temp: nullptr\n";
     temp = root;
     std::cout << temp->hasNext() << " " << temp->hasPrev() << std::endl;
+
+    auto node = makeDouNode<int>(1000, nullptr, nullptr);
+    std::cout << node->getData() << std::endl;
 
 }
 
@@ -132,4 +141,31 @@ void DSALib_Linear_DynArray_test() {
 
 }
 
+void DSALib_Linear_SigList_test() {
 
+    using namespace myDSALib::Linear;
+
+    std::cout << "SigList Test\n" << std::endl;
+
+    SigList<int> list(makeSigNode<int>(1));
+    list.headInsert(makeSigNode<int>(9));
+    auto node = list.getRoot();
+    while(node) {
+        std::cout << node->getData() << std::endl;
+        node = node->Next();
+    }
+    node = list.findNode(1);
+    std::cout << node->getData() << std::endl;
+    node = list.getRoot();
+    std::cout << node->getData() << std::endl;
+    std::cout << list.hasCircle() << std::endl;
+
+    std::cout << list.reverse() << std::endl;
+    node = list.getRoot();
+    while(node) {
+        std::cout << node->getData() << std::endl;
+        node = node->Next();
+    }
+
+
+}
