@@ -15,25 +15,37 @@ private:
     dNode<Ty>* tail;
     void repairHead() {
         if(!hasHead())
-            head = new dNode(Ty{}, nullptr, tail);
+            head = new dNode<Ty>(Ty{}, nullptr, tail);
     }
     void repairTail() {
         if(!hasTail())
-            tail = new dNode(Ty{}, head, nullptr);
+            tail = new dNode<Ty>(Ty{}, head, nullptr);
     }
 public:
     explicit DouList()
-        : head(new dNode(Ty{}, nullptr, tail)), tail(new dNode(Ty{, head, nullptr})) { }
+        : head(new dNode<Ty>(Ty{}, nullptr, tail)), tail(new dNode<Ty>(Ty{}, head, nullptr)) { }
     explicit DouList(pdNode node)
         : DouList()
     {
         head->insertNext(node);
     }
-    explicit DouList(pdNode&& other)
+    explicit DouList(DouList<Ty>&& other)
         : head(other.head), tail(other.tail)
     {
         other.head = nullptr;
         other.tail = nullptr;
+    }
+
+    ~DouList() {
+        if(!head)
+            return;
+        pdNode cur = getRoot();
+        while(cur) {
+            pdNode nex = cur->Next();
+            delete cur;
+            cur = nex;
+        }
+        delete head;
     }
 
     DouList(const DouList&) = delete;
@@ -61,14 +73,37 @@ public:
         return tail->Prev();
     }
 
+    pdNode findNode(Ty value) {
+        pdNode temp = getRoot();
+        while(temp) {
+            if(temp->getData() == value)
+                return temp;
+            temp = temp->Next();
+        }
+        return nullptr;
+    }
+    pdNode rfindNode(Ty value) {
+        pdNode temp = getLast();
+        while(temp) {
+            if(temp->getData() == value)
+                return temp;
+            temp = temp->Prev();
+        }
+        return nullptr;
+    }
+
     void headInsert(pdNode node) {
         if(!hasList()) {
-            if(!hasHead())
-                head = new dNode(Ty{}, nullptr, tail);
-            if(!hasTail())
-                tail = new dNode(Ty{}, head, nullptr);
+            repair();
         }
         head->insertNext(node);
+    }
+
+    void tailInsert(pdNode node) {
+        if(!hasList()) {
+            repair();
+        }
+        tail->insertPrev(node);
     }
 
     void repair() {
