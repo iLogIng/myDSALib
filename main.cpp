@@ -65,6 +65,19 @@ void DSALib_Linear_SigList_test() {
 
     std::cout << "SigList Test\n" << std::endl;
 
+    SigList<int> list(1);
+    list.push_front(2);
+    list.push_front(3);
+    list.push_back(4);
+    list.pop_front();
+    for(int i = 0; i < 3; ++i)
+        list.pop_back();
+
+    for(int i = 0; i < 5; ++i)
+        list.push_back(i);
+    list.reverse();
+
+    return;
 }
 #if 0
 void DSALib_Linear_DouList_test() {

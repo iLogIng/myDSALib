@@ -1,7 +1,4 @@
 #pragma once
-#include <cstddef>
-#include <exception>
-#include <utility>
 #include <memory>
 
 namespace myDSALib
@@ -14,26 +11,32 @@ namespace Linear
  */
 
 template<typename Ty>
+class SigList;
+
+template<typename Ty>
 class sNode
 {
     using psNode = sNode<Ty>*;
+    using unique_psNode = std::unique_ptr<sNode<Ty>>;
     friend class SigList<Ty>;
 private:
-    psNode next;
+    unique_psNode next;
     Ty data;
 
-    void setNext(psNode node) noexcept { next = node; }
+    void setNext(unique_psNode& node) noexcept { next = std::move(node); }
 
-    void setData(Ty d) noexcept { data = d}
+    void setData(Ty d) noexcept { data = d; }
 public:
     explicit sNode(const Ty& d = Ty{}) noexcept
         : data(d), next(nullptr) { }
-    explicit sNode(const Ty& d; psNode next_node) noexcept
-        : data(d), next(next_node) { }
+    explicit sNode(const Ty& d, unique_psNode next_node) noexcept
+        : data(d), next(std::move(next_node)) { }
 
-    psNode Next() const noexcept { return next; }
+    psNode Next() const noexcept { return next.get(); }
 
     Ty& Data() noexcept { return data; }
+
+    bool hasNext() const noexcept { return next != nullptr; }
 };
 
 }
