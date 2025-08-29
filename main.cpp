@@ -76,6 +76,13 @@ void DSALib_Linear_SigList_test() {
     for(int i = 0; i < 5; ++i)
         list.push_back(i);
     list.reverse();
+    list.emplace(list.end(), 9);
+    list.emplace_front(8);
+    list.emplace(list.end(), 22);
+
+    for(auto l : list) {
+        std::cout << l << std::endl;
+    }
 
     return;
 }

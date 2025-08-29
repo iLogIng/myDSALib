@@ -31,6 +31,9 @@ public:
         : data(d), next(nullptr) { }
     explicit sNode(const Ty& d, unique_psNode next_node) noexcept
         : data(d), next(std::move(next_node)) { }
+    template<typename... Args>
+    explicit sNode(Args&&... args) noexcept
+        : data(std::forward<Args>(args)...), next(nullptr) { }
 
     psNode Next() const noexcept { return next.get(); }
 
