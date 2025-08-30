@@ -25,13 +25,13 @@ private:
     size_t count = 0;        // 链表长度 list length
 public:
     explicit SigList(const Ty& value) noexcept
-        : head(new Node(value)), tail(head.get()), count(1) { }
+        : head(makeSigNode(value)), tail(head.get()), count(1) { }
 
     explicit SigList(SigList<Ty>&& other)
         : head(other.head.release()), tail(other.tail), count(other.size) {
             other.head.reset();
             other.tail = nullptr;
-            other.size = 0;
+            other.count = 0;
         }
     SigList& operator=(SigList<Ty>&& other) {
         if(this == &other)
@@ -39,14 +39,20 @@ public:
 
         this->clear();
 
-        this->head = other.head.release();
-        this->size = other.size;
+        this->head = std::move(other.head);
+        this->count = other.count;
         this->tail = other.tail;
 
         other.head.reset();
         other.tail = nullptr;
-        other.size = 0;
+        other.count = 0;
+
+        return *this;
     }
+
+    template<typename... Args>
+    explicit SigList(Args&&... args) noexcept
+        : head(makeSigNode<Ty>(std::forward<Args>(args)...)), tail(head.get()), count(1) { }
 
     ~SigList() = default;
 
@@ -68,7 +74,7 @@ public:
     void emplace_front(Args&&... args) noexcept;
     // emplace tail inset
     template<typename... Args>
-    void emplace_tail(Args&&... args) noexcept;
+    void emplace_back(Args&&... args) noexcept;
 
     // insert by iterator
     iterator insert(iterator& itr, const Ty& val) noexcept;
@@ -84,6 +90,12 @@ public:
     // remove tail
     unique_pNode pop_back() noexcept;
 
+    // remove node by iterator
+    unique_pNode remove_node(iterator& pos) noexcept;
+
+    // find iterator by data
+    iterator find(Ty& val) noexcept;
+
     // clear this List
     void clear() noexcept;
 
@@ -91,7 +103,6 @@ public:
     size_t size() const noexcept { return count; }
     // if list empty
     bool empty() const noexcept { return count == 0; }
-
 
 public:
     // reverse this list
@@ -175,6 +186,7 @@ public:
     iterator end() noexcept {
         return iterator(nullptr);
     }
+
     const_iterator begin() const noexcept {
         return const_iterator(head.get());
     }
@@ -201,7 +213,7 @@ template<typename Ty>
 void SigList<Ty>::push_front(const Ty& val) noexcept {
     unique_pNode node = makeSigNode(val);
 
-    node->setNext(head);
+    node->next = std::move(head);
     head = std::move(node);
 
     if(!tail)
@@ -216,7 +228,7 @@ template<typename Ty>
 void SigList<Ty>::push_front(Ty&& val) noexcept {
     unique_pNode node = makeSigNode<Ty>(std::forward<Ty>(val));
 
-    node->setNext(head);
+    node->next = std::move(head);
     head = std::move(node);
 
     if(!tail)
@@ -262,7 +274,7 @@ void SigList<Ty>::push_back(Ty&& val) noexcept {
 template<typename Ty>
 template<typename... Args>
 void SigList<Ty>::emplace_front(Args&&... args) noexcept {
-    unique_pNode node(new Node(std::forward<Args>(args)...));
+    unique_pNode node = makeSigNode<Ty>(std::forward<Args>(args)...);
 
     node->setNext(head);
     head = std::move(node);
@@ -277,8 +289,8 @@ void SigList<Ty>::emplace_front(Args&&... args) noexcept {
 
 template<typename Ty>
 template<typename... Args>
-void SigList<Ty>::emplace_tail(Args&&... args) noexcept {
-    unique_pNode node(new Node(std::forward<Args>(args)...));
+void SigList<Ty>::emplace_back(Args&&... args) noexcept {
+    unique_pNode node = makeSigNode<Ty>(std::forward<Args>(args)...);
 
     if(!head) {
         head = std::move(node);
@@ -294,7 +306,7 @@ void SigList<Ty>::emplace_tail(Args&&... args) noexcept {
 
 template<typename Ty>
 typename SigList<Ty>::iterator SigList<Ty>::insert(iterator& itr, const Ty& val) noexcept {
-    if(itr == end()) {
+    if(itr == end() || itr.current == tail) {
         push_back(val);
         return tail ? iterator(tail) : end();
     }
@@ -312,7 +324,7 @@ typename SigList<Ty>::iterator SigList<Ty>::insert(iterator& itr, const Ty& val)
 
 template<typename Ty>
 typename SigList<Ty>::iterator SigList<Ty>::insert(iterator& itr, Ty&& val) noexcept {
-    if(itr == end()) {
+    if(itr == end() || itr.current == tail) {
         push_back(val);
         return tail ? iterator(tail) : end();
     }
@@ -331,17 +343,9 @@ typename SigList<Ty>::iterator SigList<Ty>::insert(iterator& itr, Ty&& val) noex
 template<typename Ty>
 template<typename... Args>
 typename SigList<Ty>::iterator SigList<Ty>::emplace(iterator& itr, Args&&... args) noexcept {
-    if(itr == end()) {
+    if(itr == end() || itr.current == tail) {
         unique_pNode node = makeSigNode<Ty>(std::forward<Args>(args)...);
-        if(!head) {
-            head = std::move(node);
-            tail = head.get();
-        }
-        else {
-            tail->next = std::move(node);
-            tail = tail->next.get();
-        }
-        ++count;
+        push_back(node);
         return tail ? iterator(tail) : end();
     }
     unique_pNode node = makeSigNode<Ty>(std::forward<Args>(args)...);
@@ -365,6 +369,7 @@ std::unique_ptr<sNode<Ty>> SigList<Ty>::pop_front() noexcept {
     head = std::move(pop->next);
     if(!head)
         tail = nullptr;
+    pop->next = nullptr;
     --count;
 
     return pop;
@@ -375,21 +380,60 @@ std::unique_ptr<sNode<Ty>> SigList<Ty>::pop_back() noexcept {
     if(!head)
         return nullptr;
 
-    if(!head->next) {
-        tail = nullptr;
-        --count;
-        return std::move(head);
+    if(head.get() == tail) {
+        return pop_front();
     }
 
     pNode cur = head.get();
     while(cur->next->next) {
         cur = cur->next.get();
     }
+
     unique_pNode pop = std::move(cur->next);
+
+    cur->next = nullptr;
     tail = cur;
+
     --count;
 
     return pop;
+}
+
+template<typename Ty>
+std::unique_ptr<sNode<Ty>> SigList<Ty>::remove_node(iterator& pos) noexcept {
+    if(!pos.current)
+        return nullptr;
+    if(pos == begin())
+        return pop_front();
+    if(pos == end())
+        return pop_back();
+
+    pNode pre = head.get();
+    while(pre->next.get() != pos.current) {
+        pre = pre->next.get();
+        if(!pre || !pre->next)
+            return nullptr;
+    }
+
+    unique_pNode removed = std::move(pre->next);
+    pre->next = std::move(removed->next);
+
+    removed->next = nullptr;
+
+    --count;
+
+    return removed;
+}
+
+template<typename Ty>
+typename SigList<Ty>::iterator SigList<Ty>::find(Ty& val) noexcept {
+    pNode cur = head.get();
+    while(cur) {
+        if(cur->data == val)
+            return iterator(cur);
+        cur = cur->next.get();
+    }
+    return end();
 }
 
 template<typename Ty>

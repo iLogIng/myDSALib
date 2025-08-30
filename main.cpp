@@ -2,12 +2,12 @@
 #include "DSALib/include/Linear/Array/StaArray.hpp"
 #include "DSALib/include/Linear/Array/DynArray.hpp"
 #include "DSALib/include/Linear/LinkedList/SigList.hpp"
-//#include "DSALib/include/Linear/LinkedList/DouList.hpp"
+#include "DSALib/include/Linear/LinkedList/DouList.hpp"
 
 void DSALib_Linear_StaArray_test();
 void DSALib_Linear_DynArray_test();
 void DSALib_Linear_SigList_test();
-// void DSALib_Linear_DouList_test();
+void DSALib_Linear_DouList_test();
 
 int main()
 {
@@ -15,8 +15,8 @@ int main()
 
     // DSALib_Linear_StaArray_test();
     // DSALib_Linear_DynArray_test();
-     DSALib_Linear_SigList_test();
-    // DSALib_Linear_DouList_test();
+    // DSALib_Linear_SigList_test();
+     DSALib_Linear_DouList_test();
 
     return 0;
 }
@@ -86,13 +86,25 @@ void DSALib_Linear_SigList_test() {
 
     return;
 }
-#if 0
+
 void DSALib_Linear_DouList_test() {
 
     using namespace myDSALib::Linear;
 
     std::cout << "DouList Test\n" << std::endl;
 
+    DouList<int> list(1);
+    list.push_front(13);
+    list.push_back(32);
+    list.reverse();
+    for(auto l : list) {
+        std::cout << l << std::endl;
+    }
+    // list.pop_front();
+    // list.pop_back();
+    // list.pop_back();
+
+    return;
 }
-#endif
+
 
