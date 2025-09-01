@@ -24,16 +24,16 @@ private:
     pNode tail;     // 尾结点 tail node
     size_t count = 0;        // 链表长度 list length
 public:
-    explicit SigList(const Ty& value) noexcept
+    explicit SigList(const Ty& value)
         : head(makeSigNode(value)), tail(head.get()), count(1) { }
 
-    explicit SigList(SigList<Ty>&& other)
+    explicit SigList(SigList<Ty>&& other) noexcept
         : head(other.head.release()), tail(other.tail), count(other.size) {
             other.head.reset();
             other.tail = nullptr;
             other.count = 0;
         }
-    SigList& operator=(SigList<Ty>&& other) {
+    SigList& operator=(SigList<Ty>&& other) noexcept {
         if(this == &other)
             return *this;
 
@@ -51,7 +51,7 @@ public:
     }
 
     template<typename... Args>
-    explicit SigList(Args&&... args) noexcept
+    explicit SigList(Args&&... args)
         : head(makeSigNode<Ty>(std::forward<Args>(args)...)), tail(head.get()), count(1) { }
 
     ~SigList() = default;
@@ -61,29 +61,29 @@ public:
 
 public:
     // head insert
-    void push_front(const Ty& val) noexcept;
+    void push_front(const Ty& val);
     // move head insert
-    void push_front(Ty&& val) noexcept;
+    void push_front(Ty&& val);
     // tail insert
-    void push_back(const Ty& val) noexcept;
+    void push_back(const Ty& val);
     // move tail insert
-    void push_back(Ty&& val) noexcept;
+    void push_back(Ty&& val);
 
     // emplace head insert
     template<typename... Args>
-    void emplace_front(Args&&... args) noexcept;
+    void emplace_front(Args&&... args);
     // emplace tail inset
     template<typename... Args>
-    void emplace_back(Args&&... args) noexcept;
+    void emplace_back(Args&&... args);
 
     // insert by iterator
-    iterator insert(iterator& itr, const Ty& val) noexcept;
+    iterator insert(iterator& itr, const Ty& val);
     // move insert by iterator
-    iterator insert(iterator& itr, Ty&& val) noexcept;
+    iterator insert(iterator& itr, Ty&& val);
 
     // insert emplace
     template<typename... Args>
-    iterator emplace(iterator& itr, Args&&... args) noexcept;
+    iterator emplace(iterator& itr, Args&&... args);
 
     // remove head
     unique_pNode pop_front() noexcept;
@@ -159,7 +159,7 @@ public:
         const Ty& operator*() const noexcept {
             return current->data;
         }
-        Ty* operator->() noexcept {
+        const Ty* operator->() const noexcept {
             return &(current->data);
         }
         const_iterator& operator++() noexcept {
@@ -210,7 +210,7 @@ std::unique_ptr<sNode<Ty>> makeSigNode(Args&&... args) {
 }
 
 template<typename Ty>
-void SigList<Ty>::push_front(const Ty& val) noexcept {
+void SigList<Ty>::push_front(const Ty& val) {
     unique_pNode node = makeSigNode(val);
 
     node->next = std::move(head);
@@ -225,7 +225,7 @@ void SigList<Ty>::push_front(const Ty& val) noexcept {
 }
 
 template<typename Ty>
-void SigList<Ty>::push_front(Ty&& val) noexcept {
+void SigList<Ty>::push_front(Ty&& val) {
     unique_pNode node = makeSigNode<Ty>(std::forward<Ty>(val));
 
     node->next = std::move(head);
@@ -240,7 +240,7 @@ void SigList<Ty>::push_front(Ty&& val) noexcept {
 }
 
 template<typename Ty>
-void SigList<Ty>::push_back(const Ty& val) noexcept {
+void SigList<Ty>::push_back(const Ty& val) {
     unique_pNode node = makeSigNode<Ty>(val);
 
     if(!head) {
@@ -256,7 +256,7 @@ void SigList<Ty>::push_back(const Ty& val) noexcept {
 }
 
 template<typename Ty>
-void SigList<Ty>::push_back(Ty&& val) noexcept {
+void SigList<Ty>::push_back(Ty&& val) {
     unique_pNode node = makeSigNode<Ty>(std::forward<Ty>(val));
 
     if(!head) {
@@ -273,7 +273,7 @@ void SigList<Ty>::push_back(Ty&& val) noexcept {
 
 template<typename Ty>
 template<typename... Args>
-void SigList<Ty>::emplace_front(Args&&... args) noexcept {
+void SigList<Ty>::emplace_front(Args&&... args) {
     unique_pNode node = makeSigNode<Ty>(std::forward<Args>(args)...);
 
     node->setNext(head);
@@ -289,7 +289,7 @@ void SigList<Ty>::emplace_front(Args&&... args) noexcept {
 
 template<typename Ty>
 template<typename... Args>
-void SigList<Ty>::emplace_back(Args&&... args) noexcept {
+void SigList<Ty>::emplace_back(Args&&... args) {
     unique_pNode node = makeSigNode<Ty>(std::forward<Args>(args)...);
 
     if(!head) {
@@ -305,7 +305,7 @@ void SigList<Ty>::emplace_back(Args&&... args) noexcept {
 }
 
 template<typename Ty>
-typename SigList<Ty>::iterator SigList<Ty>::insert(iterator& itr, const Ty& val) noexcept {
+typename SigList<Ty>::iterator SigList<Ty>::insert(iterator& itr, const Ty& val) {
     if(itr == end() || itr.current == tail) {
         push_back(val);
         return tail ? iterator(tail) : end();
@@ -323,7 +323,7 @@ typename SigList<Ty>::iterator SigList<Ty>::insert(iterator& itr, const Ty& val)
 }
 
 template<typename Ty>
-typename SigList<Ty>::iterator SigList<Ty>::insert(iterator& itr, Ty&& val) noexcept {
+typename SigList<Ty>::iterator SigList<Ty>::insert(iterator& itr, Ty&& val) {
     if(itr == end() || itr.current == tail) {
         push_back(val);
         return tail ? iterator(tail) : end();
@@ -342,10 +342,9 @@ typename SigList<Ty>::iterator SigList<Ty>::insert(iterator& itr, Ty&& val) noex
 
 template<typename Ty>
 template<typename... Args>
-typename SigList<Ty>::iterator SigList<Ty>::emplace(iterator& itr, Args&&... args) noexcept {
+typename SigList<Ty>::iterator SigList<Ty>::emplace(iterator& itr, Args&&... args) {
     if(itr == end() || itr.current == tail) {
-        unique_pNode node = makeSigNode<Ty>(std::forward<Args>(args)...);
-        push_back(node);
+        push_back(std::forward<Args>(args)...);
         return tail ? iterator(tail) : end();
     }
     unique_pNode node = makeSigNode<Ty>(std::forward<Args>(args)...);

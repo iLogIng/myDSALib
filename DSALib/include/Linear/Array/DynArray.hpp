@@ -16,29 +16,7 @@ private:
     size_t size;
     size_t capacity;
 
-    void reserve_capacity(size_t new_capacity) {
-        if(new_capacity <= capacity)
-            return;
-
-        Ty* new_array = (Ty*)(operator new[](new_capacity * sizeof(Ty)));
-
-        for(size_t i = 0; i < size; ++i) {
-            try {
-                new (&new_array[i]) Ty(std::move(array[i]));
-            } catch(...) {
-                for(size_t s = 0; s < size; ++s) {
-                    new_array[i].~Ty();
-                }
-                operator delete[](new_array);
-                throw;
-            }
-            new_array[i].~Ty();
-        }
-
-        operator delete[](array);
-        array = new_array;
-        capacity = new_capacity;
-    }
+    void reserve_capacity(size_t new_capacity);
 
 public:
     explicit DynArray()
@@ -61,19 +39,20 @@ public:
             array = (Ty*)static_cast(operator new[](size * sizeof(Ty)));
             size_t i = 0;
             for(auto& item : init_list) {
-                new (&array[i++]) (item)
+                new (&array[i++]) Ty(item);
             }
         } else {
             array = nullptr;
         }
     }
+
     DynArray(const DynArray& other)
         : size(other.size), capacity(other.size)
     {
         if(size >= 0) {
             array = (Ty*)(operator new[](other.size * sizeof(Ty)));
             for(size_t i = 0; i < size; ++i) {
-                new (&array[i]) (other[i]);
+                new (&array[i]) Ty(other[i]);
             }
         } else {
             array = nullptr;
@@ -123,15 +102,16 @@ public:
     size_t getCapacity() noexcept { return capacity; }
     const size_t getCapacity() const noexcept { return capacity; }
 
-    bool empty() { return size == 0; }
+    bool empty() noexcept { return size == 0; }
 
-    Ty front() { return array[0]; }
-    const Ty front() const { return array[0]; }
-    Ty back() { return array[size - 1]; }
-    const Ty back() const { return array[size - 1]; }
+    Ty front() noexcept { return array[0]; }
+    const Ty front() const noexcept { return array[0]; }
+    Ty back() noexcept { return array[size - 1]; }
+    const Ty back() const noexcept { return array[size - 1]; }
 
     Ty& operator[](size_t index) { return array[index]; }
     const Ty& operator[](size_t index) const { return array[index]; }
+
     Ty& at(size_t index) {
         if(index >= size)
             throw std::out_of_range("Index out of range");
@@ -143,6 +123,7 @@ public:
         return array[index];
     }
 
+public:
     void clear() {
         for(size_t i = 0; i < size; ++i) {
             array[i].~Ty();
@@ -162,73 +143,17 @@ public:
         }
     }
 
-    void resize(size_t new_size, Ty value = Ty{}) {
-        if(new_size > size) {
-            if(new_size > capacity)
-                reserve(new_size);
+    void resize(size_t new_size, Ty value = Ty{});
 
-            for(size_t i = size; i < new_size; ++i) {
-                new (&array[i]) Ty(value);
-            }
-        } else if(new_size < size) {
-            for(size_t i = new_size; i < size; ++i) {
-                array[i].~Ty();
-            }
-        }
-        size = new_size;
-    }
+    void shrink_to_fit() noexcept;
 
-    void shrink_to_fit() {
-        if(capacity > size) {
-            if(size == 0) {
-                operator delete[](array);
-                capacity = 0;
-                array = nullptr;
-            } else {
-                reserve_capacity(size);
-            }
-        }
-    }
-
-    void push_back(Ty& value) {
-        if(size >= capacity) {
-            reserve(capacity == 0 ? 1 : capacity * 2);
-        }
-        new (&array[size]) Ty(value);
-        ++size;
-    }
-
-    void push_back(Ty&& value) {
-        if(size >= capacity) {
-            reserve(capacity == 0 ? 1 : capacity * 2);
-        }
-        new (&array[size]) Ty(value);
-        ++size;
-    }
-
-    void emplace_back(Ty&& value) {
-        if(size >= capacity) {
-            reserve(capacity == 0 ? 1 : capacity * 2);
-        }
-        new (&array[size]) Ty(std::move(value));
-        ++size;
-    }
-
+    void push_back(Ty& value);
+    void push_back(Ty&& value);
+    void emplace_back(Ty&& value);
     template<typename... Args>
-    void emplace_back(Args&&... args) {
-        if(size >= capacity) {
-            reserve(capacity == 0 ? 1 : capacity * 2);
-        }
-        new (&array[size]) Ty(std::forward<Args>(args)...);
-        ++size;
-    }
+    void emplace_back(Args&&... args);
 
-    void pop_back() {
-        if(size > 0) {
-            --size;
-            array[size].~Ty();
-        }
-    }
+    void pop_back() noexcept;
 
 };
 
@@ -252,6 +177,109 @@ template<typename Ty>
 bool operator!=(const DynArray<Ty>& left, const DynArray<Ty>& right) {
     return !(left == right);
 }
+
+// ================================================
+
+template<typename Ty>
+void DynArray<Ty>::reserve_capacity(size_t new_capacity) {
+    if(new_capacity <= capacity)
+        return;
+
+    Ty* new_array = (Ty*)(operator new[](new_capacity * sizeof(Ty)));
+
+    for(size_t i = 0; i < size; ++i) {
+        try {
+            new (&new_array[i]) Ty(std::move(array[i]));
+        } catch(...) {
+            for(size_t s = 0; s < size; ++s) {
+                new_array[i].~Ty();
+            }
+            operator delete[](new_array);
+            throw;
+        }
+        new_array[i].~Ty();
+    }
+
+    operator delete[](array);
+    array = new_array;
+    capacity = new_capacity;
+}
+
+template<typename Ty>
+void DynArray<Ty>::resize(size_t new_size, Ty value = Ty{}) {
+    if(new_size > size) {
+        if(new_size > capacity)
+            reserve(new_size);
+
+        for(size_t i = size; i < new_size; ++i) {
+            new (&array[i]) Ty(value);
+        }
+    } else if(new_size < size) {
+        for(size_t i = new_size; i < size; ++i) {
+            array[i].~Ty();
+        }
+    }
+    size = new_size;
+}
+
+template<typename Ty>
+void DynArray<Ty>::shrink_to_fit() noexcept {
+    if(capacity > size) {
+        if(size == 0) {
+            operator delete[](array);
+            capacity = 0;
+            array = nullptr;
+        } else {
+            reserve_capacity(size);
+        }
+    }
+}
+
+template<typename Ty>
+void DynArray<Ty>::push_back(Ty& value) {
+    if(size >= capacity) {
+        reserve(capacity == 0 ? 1 : capacity * 2);
+    }
+    new (&array[size]) Ty(value);
+    ++size;
+}
+
+template<typename Ty>
+void DynArray<Ty>::push_back(Ty&& value) {
+    if(size >= capacity) {
+        reserve(capacity == 0 ? 1 : capacity * 2);
+    }
+    new (&array[size]) Ty(value);
+    ++size;
+}
+
+template<typename Ty>
+void DynArray<Ty>::emplace_back(Ty&& value) {
+    if(size >= capacity) {
+        reserve(capacity == 0 ? 1 : capacity * 2);
+    }
+    new (&array[size]) Ty(std::move(value));
+    ++size;
+}
+
+template<typename Ty>
+template<typename... Args>
+void DynArray<Ty>::emplace_back(Args&&... args) {
+    if(size >= capacity) {
+        reserve(capacity == 0 ? 1 : capacity * 2);
+    }
+    new (&array[size]) Ty(std::forward<Args>(args)...);
+    ++size;
+}
+
+template<typename Ty>
+void DynArray<Ty>::pop_back() noexcept {
+    if(size > 0) {
+        --size;
+        array[size].~Ty();
+    }
+}
+
 
 }
 }

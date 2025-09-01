@@ -66,6 +66,8 @@ public:
     constexpr size_t getSize() noexcept { return size; }
     constexpr size_t empty() noexcept { return size == 0; }
 
+public:
+
 };
 
 }

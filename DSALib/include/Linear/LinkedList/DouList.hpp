@@ -57,29 +57,29 @@ public:
 
 public:
     // head insert
-    void push_front(const Ty& val) noexcept;
+    void push_front(const Ty& val);
     // move head insert
-    void push_front(Ty&& val) noexcept;
+    void push_front(Ty&& val);
     // tail insert
-    void push_back(const Ty& val) noexcept;
+    void push_back(const Ty& val);
     // move tail insert
-    void push_back(Ty&& val) noexcept;
+    void push_back(Ty&& val);
 
     // emplace head insert
     template<typename... Args>
-    void emplace_front(Args&&... args) noexcept;
+    void emplace_front(Args&&... args);
     // emplace tail insert
     template<typename... Args>
-    void emplace_back(Args&&... args) noexcept;
+    void emplace_back(Args&&... args);
 
     // insert by iterator
-    iterator insert(iterator& itr, const Ty& val) noexcept;
+    iterator insert(iterator& itr, const Ty& val);
     // move insert by iterator
-    iterator insert(iterator& itr, Ty&& val) noexcept;
+    iterator insert(iterator& itr, Ty&& val);
 
     // insert emplace
     template<typename... Args>
-    iterator emplace(iterator& itr, Args&&... args) noexcept;
+    iterator emplace(iterator& itr, Args&&... args);
 
     // remove head
     unique_pNode pop_front() noexcept;
@@ -166,7 +166,7 @@ public:
         const Ty& operator*() const noexcept {
             return current->data;
         }
-        Ty* operator->() noexcept {
+        const Ty* operator->() const noexcept {
             return &(current->data);
         }
         const_iterator& operator++() noexcept {
@@ -240,7 +240,7 @@ std::unique_ptr<dNode<Ty>> makeDouNode(Args&&... args) {
 }
 
 template<typename Ty>
-void DouList<Ty>::push_front(const Ty& val) noexcept {
+void DouList<Ty>::push_front(const Ty& val) {
     unique_pNode node(makeDouNode<Ty>(val));
 
     if(head) {
@@ -257,7 +257,7 @@ void DouList<Ty>::push_front(const Ty& val) noexcept {
 }
 
 template<typename Ty>
-void DouList<Ty>::push_front(Ty&& val) noexcept {
+void DouList<Ty>::push_front(Ty&& val) {
     unique_pNode node = makeDouNode<Ty>(std::forward<Ty>(val));
 
     if(head) {
@@ -274,7 +274,7 @@ void DouList<Ty>::push_front(Ty&& val) noexcept {
 }
 
 template<typename Ty>
-void DouList<Ty>::push_back(const Ty& val) noexcept {
+void DouList<Ty>::push_back(const Ty& val) {
     unique_pNode node(makeDouNode<Ty>(val));
 
     if(!head) {
@@ -291,7 +291,7 @@ void DouList<Ty>::push_back(const Ty& val) noexcept {
 }
 
 template<typename Ty>
-void DouList<Ty>::push_back(Ty&& val) noexcept {
+void DouList<Ty>::push_back(Ty&& val) {
     unique_pNode node = makeDouNode<Ty>(std::forward<Ty>(val));
 
     if(!head) {
@@ -309,7 +309,7 @@ void DouList<Ty>::push_back(Ty&& val) noexcept {
 
 template<typename Ty>
 template<typename... Args>
-void DouList<Ty>::emplace_front(Args&&... args) noexcept {
+void DouList<Ty>::emplace_front(Args&&... args) {
     unique_pNode node = makeDouNode<Ty>(std::forward<Ty>(args)...);
 
     if(head) {
@@ -327,7 +327,7 @@ void DouList<Ty>::emplace_front(Args&&... args) noexcept {
 
 template<typename Ty>
 template<typename... Args>
-void DouList<Ty>::emplace_back(Args&&... args) noexcept {
+void DouList<Ty>::emplace_back(Args&&... args) {
     unique_pNode node = makeDouNode<Ty>(std::forward<Ty>(args)...);
 
     if(!head) {
@@ -344,7 +344,7 @@ void DouList<Ty>::emplace_back(Args&&... args) noexcept {
 }
 
 template<typename Ty>
-typename DouList<Ty>::iterator DouList<Ty>::insert(iterator& itr, const Ty& val) noexcept {
+typename DouList<Ty>::iterator DouList<Ty>::insert(iterator& itr, const Ty& val) {
     if(itr == end() || itr.current == tail) {
         push_back(val);
         return tail ? iterator(tail) : end();
@@ -363,7 +363,7 @@ typename DouList<Ty>::iterator DouList<Ty>::insert(iterator& itr, const Ty& val)
 }
 
 template<typename Ty>
-typename DouList<Ty>::iterator DouList<Ty>::insert(iterator& itr, Ty&& val) noexcept {
+typename DouList<Ty>::iterator DouList<Ty>::insert(iterator& itr, Ty&& val) {
     if(itr == end() || itr.current == tail) {
         push_back(val);
         return tail ? iterator(tail) : end();
@@ -383,7 +383,7 @@ typename DouList<Ty>::iterator DouList<Ty>::insert(iterator& itr, Ty&& val) noex
 
 template<typename Ty>
 template<typename... Args>
-typename DouList<Ty>::iterator DouList<Ty>::emplace(iterator& itr, Args&&... args) noexcept {
+typename DouList<Ty>::iterator DouList<Ty>::emplace(iterator& itr, Args&&... args) {
     if(itr == end() || itr.current == tail) {
         push_back(val);
         return tail ? iterator(tail) : end();
@@ -429,7 +429,7 @@ std::unique_ptr<dNode<Ty>> DouList<Ty>::pop_back() noexcept {
     if(!head)
         return nullptr;
 
-    if(head.get() == tail;) {
+    if(head.get() == tail) {
         return pop_front();
     }
 
