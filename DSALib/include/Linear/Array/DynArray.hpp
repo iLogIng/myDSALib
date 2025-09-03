@@ -13,7 +13,7 @@ class DynArray
 {
 private:
     Ty* array;
-    size_t size;
+    size_t size = 0;
     size_t capacity;
 
     void reserve_capacity(size_t new_capacity);
@@ -58,7 +58,7 @@ public:
             array = nullptr;
         }
     }
-    DynArray(DynArray&& other)
+    DynArray(DynArray&& other) noexcept
         : array(other.array), size(other.size), capacity(other.capacity)
     {
         other.array = nullptr;
@@ -66,7 +66,7 @@ public:
         other.capacity = 0;
     }
 
-    DynArray& operator=(const DynArray& other) {
+    DynArray& operator=(const DynArray& other) noexcept {
         if(this != &other) {
             DynArray temp(other);
             swap(temp);
@@ -74,7 +74,7 @@ public:
         return *this;
     }
 
-    DynArray& operator=(DynArray&& other) {
+    DynArray& operator=(DynArray&& other) noexcept {
         if(this != &other) {
             clear();
             operator delete[](array);
@@ -96,18 +96,27 @@ public:
     }
 
 public:
+    // array's size
     size_t getSize() noexcept { return size; }
+    // array's size const.Ver.
     const size_t getSize() const noexcept { return size; }
 
+    // array's capacity
     size_t getCapacity() noexcept { return capacity; }
+    // array's capacity const.Ver.
     const size_t getCapacity() const noexcept { return capacity; }
 
-    bool empty() noexcept { return size == 0; }
+    // array is empty
+    bool empty() const noexcept { return size == 0; }
 
-    Ty front() noexcept { return array[0]; }
-    const Ty front() const noexcept { return array[0]; }
-    Ty back() noexcept { return array[size - 1]; }
-    const Ty back() const noexcept { return array[size - 1]; }
+    // the front elem
+    Ty& front() noexcept { return array[0]; }
+    // the front elem const.Ver.
+    const Ty& front() const noexcept { return array[0]; }
+    // the back elem
+    Ty& back() noexcept { return array[size - 1]; }
+    // the back elem const.Ver.
+    const Ty& back() const noexcept { return array[size - 1]; }
 
     Ty& operator[](size_t index) { return array[index]; }
     const Ty& operator[](size_t index) const { return array[index]; }
@@ -124,36 +133,59 @@ public:
     }
 
 public:
-    void clear() {
+    // clear the array
+    void clear() noexcept {
         for(size_t i = 0; i < size; ++i) {
             array[i].~Ty();
         }
         size = 0;
     }
 
-    void swap(DynArray& other) {
+    // swap the array
+    void swap(DynArray& other) noexcept {
         swap(array, other.array);
         swap(size, other.size);
         swap(capacity, other.capacity);
     }
 
+    // set new capacity of array
     void reserve(size_t new_capacity) {
         if(new_capacity > capacity) {
             reserve_capacity(new_capacity);
         }
     }
 
+    // set new size of array
     void resize(size_t new_size, Ty value = Ty{});
 
+    // set capacity to fit the size
     void shrink_to_fit() noexcept;
 
-    void push_back(Ty& value);
+    // back insert
+    void push_back(const Ty& value);
+    // move back insert
     void push_back(Ty&& value);
+    // back emplace
     void emplace_back(Ty&& value);
+    // back emplace
     template<typename... Args>
     void emplace_back(Args&&... args);
 
+    // front insert
+    void push_front(const Ty& value);
+    // move front insert
+    void push_front(Ty&& value);
+    // front emplace
+    void emplace_front(Ty&& value);
+    // front emplace
+    template<typename... Args>
+    void emplace_front(Args&&... args);
+
+    // remove back elem
     void pop_back() noexcept;
+
+    // remove front elem
+    void pop_front() noexcept;
 
 };
 
@@ -206,7 +238,7 @@ void DynArray<Ty>::reserve_capacity(size_t new_capacity) {
 }
 
 template<typename Ty>
-void DynArray<Ty>::resize(size_t new_size, Ty value = Ty{}) {
+void DynArray<Ty>::resize(size_t new_size, Ty value) {
     if(new_size > size) {
         if(new_size > capacity)
             reserve(new_size);
@@ -236,7 +268,7 @@ void DynArray<Ty>::shrink_to_fit() noexcept {
 }
 
 template<typename Ty>
-void DynArray<Ty>::push_back(Ty& value) {
+void DynArray<Ty>::push_back(const Ty& value) {
     if(size >= capacity) {
         reserve(capacity == 0 ? 1 : capacity * 2);
     }
@@ -249,7 +281,7 @@ void DynArray<Ty>::push_back(Ty&& value) {
     if(size >= capacity) {
         reserve(capacity == 0 ? 1 : capacity * 2);
     }
-    new (&array[size]) Ty(value);
+    new (&array[size]) Ty(std::forward<Ty>(value));
     ++size;
 }
 
@@ -273,6 +305,59 @@ void DynArray<Ty>::emplace_back(Args&&... args) {
 }
 
 template<typename Ty>
+void DynArray<Ty>::push_front(const Ty& value) {
+    if(size >= capacity) {
+        reserve(capacity == 0 ? 1 : capacity * 2);
+    }
+    for(size_t i = size; i > 0; --i) {
+        new (&array[i]) Ty(std::move(array[i - 1]));
+        array[i - 1].~Ty();
+    }
+    new (&array[0]) Ty(std::move(value));
+    ++size;
+}
+
+template<typename Ty>
+void DynArray<Ty>::push_front(Ty&& value) {
+    if( size >= capacity) {
+        reserve(capacity == 0 ? 1 : capacity * 2);
+    }
+    for(size_t i = size; i > 0; --i) {
+        new (&array[i]) Ty(std::move(array[i - 1]));
+        array[i - 1].~Ty();
+    }
+    new (&array[0]) Ty(std::forward<Ty>(value));
+    ++size;
+}
+
+template<typename Ty>
+void DynArray<Ty>::emplace_front(Ty&& value) {
+    if( size >= capacity) {
+        reserve(capacity == 0 ? 1 : capacity * 2);
+    }
+    for(size_t i = size; i > 0; --i) {
+        new (&array[i]) Ty(std::move(array[i - 1]));
+        array[i - 1].~Ty();
+    }
+    new (&array[0]) Ty(std::forward<Ty>(value));
+    ++size;
+}
+
+template<typename Ty>
+template<typename... Args>
+void DynArray<Ty>::emplace_front(Args&&... args) {
+    if( size >= capacity) {
+        reserve(capacity == 0 ? 1 : capacity * 2);
+    }
+    for(size_t i = size; i > 0; --i) {
+        new (&array[i]) Ty(std::move(array[i - 1]));
+        array[i - 1].~Ty();
+    }
+    new (&array[0]) Ty(std::forward<Args>(args)...);
+    ++size;
+}
+
+template<typename Ty>
 void DynArray<Ty>::pop_back() noexcept {
     if(size > 0) {
         --size;
@@ -280,6 +365,16 @@ void DynArray<Ty>::pop_back() noexcept {
     }
 }
 
+template<typename Ty>
+void DynArray<Ty>::pop_front() noexcept {
+    if(size > 0) {
+        --size;
+        for(size_t i = 0; i < size; ++i) {
+            array[i].~Ty();
+            new (&array[i]) Ty(std::move(array[i + 1]));
+        }
+    }
+}
 
 }
 }

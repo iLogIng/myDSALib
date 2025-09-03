@@ -1,4 +1,5 @@
 #pragma once
+#include "Queue.hpp"
 
 namespace myDSALib
 {

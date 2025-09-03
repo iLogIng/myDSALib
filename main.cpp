@@ -3,11 +3,15 @@
 #include "DSALib/include/Linear/Array/DynArray.hpp"
 #include "DSALib/include/Linear/LinkedList/SigList.hpp"
 #include "DSALib/include/Linear/LinkedList/DouList.hpp"
+#include "DSALib/include/Linear/Stack.hpp"
+#include "DSALib/include/Linear/Queue.hpp"
 
 void DSALib_Linear_StaArray_test();
 void DSALib_Linear_DynArray_test();
 void DSALib_Linear_SigList_test();
 void DSALib_Linear_DouList_test();
+void DSALib_Linear_Stack_test();
+void DSALib_Linear_Queue_test();
 
 int main()
 {
@@ -16,7 +20,8 @@ int main()
     // DSALib_Linear_StaArray_test();
     // DSALib_Linear_DynArray_test();
     // DSALib_Linear_SigList_test();
-     DSALib_Linear_DouList_test();
+    // DSALib_Linear_DouList_test();
+     DSALib_Linear_Stack_test();
 
     return 0;
 }
@@ -28,7 +33,7 @@ void DSALib_Linear_StaArray_test() {
     std::cout << "StaArray Test\n" << std::endl;
 
     StaArray<int, 10> array(0);
-    std::cout << array.getSize() << std::endl;
+    std::cout << array.size() << std::endl;
     std::cout << array[2] << std::endl;
     std::cout << array.at(2) << std::endl;
 
@@ -107,4 +112,53 @@ void DSALib_Linear_DouList_test() {
     return;
 }
 
+void DSALib_Linear_Stack_test() {
 
+    using namespace myDSALib::Linear;
+
+    std::cout << "Stack Test\n" << std::endl;
+
+    std::cout << "Static Stack\n" << std::endl;
+
+    Stack<int, 5> stack;
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+    stack.push(4);
+    stack.push(5);
+    std::cout << "if full ?\n" << stack.full() << std::endl << std::endl;
+    for(size_t i = 0; i < stack.capacity(); ++i) {
+        std::cout << stack.top() << std::endl;
+        stack.pop();
+    }
+    std::cout << "if empty ?\n" << stack.empty() << std::endl << std::endl;
+
+
+    std::cout << "Dynamic Stack\n" << std::endl;
+
+    Stack<int> dyn;
+    for(int i = 0; i < 3; ++i) {
+        dyn.push(i);
+    }
+    std::cout << "size " << dyn.size() << std::endl;
+    std::cout << "if empty ?\n" << dyn.empty() << std::endl << std::endl;
+    size_t size = dyn.size();
+    for(size_t i = 0; i < size; ++i) {
+        std::cout << dyn.top() << std::endl;
+        dyn.pop();
+    }
+    std::cout << "size " << dyn.size() << std::endl;
+    std::cout << "if empty ?\n" << dyn.empty() << std::endl << std::endl;
+
+
+    return;
+}
+
+void DSALib_Linear_Queue_test() {
+    using namespace myDSALib::Linear;
+
+    std::cout << "Queue Test\n" << std::endl;
+
+    
+
+}
