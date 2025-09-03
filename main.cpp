@@ -21,7 +21,8 @@ int main()
     // DSALib_Linear_DynArray_test();
     // DSALib_Linear_SigList_test();
     // DSALib_Linear_DouList_test();
-     DSALib_Linear_Stack_test();
+    // DSALib_Linear_Stack_test();
+     DSALib_Linear_Queue_test();
 
     return 0;
 }
@@ -159,6 +160,34 @@ void DSALib_Linear_Queue_test() {
 
     std::cout << "Queue Test\n" << std::endl;
 
-    
+    std::cout << "Dynamic Queue\n" << std::endl;
+    Queue<int> dyn;
+    for(int i = 0; i < 5; ++i) {
+        dyn.push(i);
+    }
+    std::cout << "is queue empty ?\n" << dyn.empty() << std::endl;
+    std::cout << "size " << dyn.size() << std::endl;
+    size_t size = dyn.size();
+    for(size_t i = 0; i < size; ++i) {
+        std::cout << dyn.front() << std::endl;
+        dyn.pop();
+    }
+    std::cout << "is queue empty ?\n" << dyn.empty() << std::endl;
+    std::cout << "size " << dyn.size() << std::endl << std::endl;
+
+    std::cout << "Static Queue\n" << std::endl;
+    Queue<int, 5> sta;
+    for(int i = 0; i < 5; ++i) {
+        sta.push(i);
+    }
+    std::cout << "is queue empty ?\n" << sta.empty() << std::endl;
+    std::cout << "size " << sta.size() << std::endl;
+    size = sta.size();
+    for(size_t i = 0; i < size; ++i) {
+        std::cout << sta.front() << std::endl;
+        sta.pop();
+    }
+    std::cout << "is queue empty ?\n" << sta.empty() << std::endl;
+    std::cout << "size " << sta.size() << std::endl << std::endl;
 
 }

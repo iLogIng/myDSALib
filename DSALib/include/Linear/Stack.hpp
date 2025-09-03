@@ -81,6 +81,8 @@ public:
 
 };
 
+// ================================================
+
 // Static Stack
 template<typename Ty, size_t N>
 class StaStack
@@ -90,7 +92,7 @@ private:
     size_t top_idx = static_cast<size_t>(-1);
 public:
     StaStack()
-        : stack() { }
+        : stack(), top_idx(static_cast<size_t>(-1)) { }
 
     ~StaStack() = default;
 
@@ -168,6 +170,9 @@ public:
 
 };
 
+// ===============================================
+
+// Stack can be Dynamic or Static
 template<typename Ty, size_t N = 0>
 class Stack
     : public std::conditional_t<(N == 0), DynStack<Ty>, StaStack<Ty, N>>
@@ -180,7 +185,7 @@ public:
     using Base::Base;
 
     static_assert(N == 0 || N > 0,
-        "Stack size N must be Positive for Static or Zero for Dynamic");
+        "Stack's size N must be Positive for Static or Zero for Dynamic");
 
 };
 

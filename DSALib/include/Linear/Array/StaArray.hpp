@@ -80,9 +80,9 @@ public:
     }
 
     // array's size
-    constexpr size_t size() noexcept { return N; }
+    constexpr size_t size() const noexcept { return N; }
     // array is empty
-    constexpr size_t empty() noexcept { return N == 0; }
+    constexpr size_t empty() const noexcept { return N == 0; }
 
     // the front elem
     constexpr Ty& front() noexcept { return array[0]; }
@@ -99,7 +99,8 @@ public:
     }
 
 public:
-
+    static_assert(N > 0,
+        "The size N of Static Array must be a Positive Number");
 };
 
 }
