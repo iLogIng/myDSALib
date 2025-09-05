@@ -79,6 +79,9 @@ public:
         this->stack.swap(other.stack);
     }
 
+    // clear
+    void clear() noexcept { stack.clear(); }
+
 };
 
 // ================================================
@@ -167,6 +170,16 @@ public:
         this->stack.swap(other.stack);
         std::swap(this->top_idx,other.top_idx);
     }
+
+    // clear
+    void clear() noexcept {
+        stack.clear();
+        top_idx = static_cast<size_t>(-1);
+    }
+
+public:
+    static_assert(N > 0,
+        "Static's size N must be Positive Number");
 
 };
 

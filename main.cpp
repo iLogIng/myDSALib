@@ -5,6 +5,7 @@
 #include "DSALib/include/Linear/LinkedList/DouList.hpp"
 #include "DSALib/include/Linear/Stack.hpp"
 #include "DSALib/include/Linear/Queue.hpp"
+#include "DSALib/include/Linear/DeQue.hpp"
 
 void DSALib_Linear_StaArray_test();
 void DSALib_Linear_DynArray_test();
@@ -12,6 +13,7 @@ void DSALib_Linear_SigList_test();
 void DSALib_Linear_DouList_test();
 void DSALib_Linear_Stack_test();
 void DSALib_Linear_Queue_test();
+void DSALib_Linear_DeQue_test();
 
 int main()
 {
@@ -189,5 +191,14 @@ void DSALib_Linear_Queue_test() {
     }
     std::cout << "is queue empty ?\n" << sta.empty() << std::endl;
     std::cout << "size " << sta.size() << std::endl << std::endl;
+
+}
+
+void DSALib_Linear_DeQue_test() {
+    using namespace myDSALib::Linear;
+
+    std::cout << "DeQue Test\n" << std::endl;
+
+    
 
 }

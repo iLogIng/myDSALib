@@ -91,6 +91,9 @@ public:
         this->queue.swap(other.queue);
     }
 
+    // clear
+    void clear() noexcept { queue.clear(); }
+
 };
 
 // ===============================================
@@ -195,6 +198,17 @@ public:
         std::swap(this->front_idx, other.front_idx);
         std::swap(this->back_idx, other.back_idx);
     }
+
+    // clear
+    void clear() noexcept {
+        queue.clear();
+        front_idx = 0;
+        back_idx = 0;
+    }
+
+public:
+    static_assert(N > 0,
+        "Queue's size N must be Positive Number");
 
 };
 

@@ -98,9 +98,15 @@ public:
         swap(this->array, other.array);
     }
 
+    // clear
+    void clear() noexcept {
+        for(size_t i = 0; i < N; ++i)
+            array[i].~Ty();
+    }
+
 public:
     static_assert(N > 0,
-        "The size N of Static Array must be a Positive Number");
+        "Static Array's size N must be a Positive Number");
 };
 
 }

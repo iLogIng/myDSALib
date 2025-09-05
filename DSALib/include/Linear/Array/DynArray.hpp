@@ -290,7 +290,7 @@ void DynArray<Ty>::emplace_back(Ty&& value) {
     if(size >= capacity) {
         reserve(capacity == 0 ? 1 : capacity * 2);
     }
-    new (&array[size]) Ty(std::move(value));
+    new (&array[size]) Ty(std::forward<Ty>(value));
     ++size;
 }
 
