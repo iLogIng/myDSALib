@@ -368,11 +368,12 @@ void DynArray<Ty>::pop_back() noexcept {
 template<typename Ty>
 void DynArray<Ty>::pop_front() noexcept {
     if(size > 0) {
-        --size;
+        array[0].~Ty();
         for(size_t i = 0; i < size; ++i) {
-            array[i].~Ty();
-            new (&array[i]) Ty(std::move(array[i + 1]));
+            array[i] = std::move(array[i + 1]);
         }
+        array[size - 1].~Ty();
+        --size;
     }
 }
 

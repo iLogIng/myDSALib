@@ -24,7 +24,8 @@ int main()
     // DSALib_Linear_SigList_test();
     // DSALib_Linear_DouList_test();
     // DSALib_Linear_Stack_test();
-     DSALib_Linear_Queue_test();
+    // DSALib_Linear_Queue_test();
+     DSALib_Linear_DeQue_test();
 
     return 0;
 }
@@ -60,6 +61,9 @@ void DSALib_Linear_DynArray_test() {
     array.resize(4);
     array.resize(10, 1);
     array.emplace_back(3);
+    for(int i = 1; i < 10; ++i) {
+        array.push_front(i);
+    }
     for(size_t i = 0; i < array.getSize(); ++i) {
         std::cout << array.at(i) << " ";
     }
@@ -199,6 +203,17 @@ void DSALib_Linear_DeQue_test() {
 
     std::cout << "DeQue Test\n" << std::endl;
 
-    
+    DeQue<int> deq;
+    for(int i = 0; i < 5; ++i) {
+        deq.push_back(i);
+    }
+    for(int i = 15; i < 20; ++i) {
+        deq.push_front(i);
+    }
+    while(!deq.empty()) {
+        std::cout << deq.front() << std::endl;
+        deq.pop_front();
+    }
+    std::cout << "empty: " << deq.empty() << std::endl;
 
 }

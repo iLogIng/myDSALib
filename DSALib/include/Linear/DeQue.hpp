@@ -42,14 +42,30 @@ public:
     const size_t capacity() const noexcept { return head.getCapacity() + tail.getCapacity(); }
 
     // get front elem
-    Ty& front() noexcept { return head.back(); }
+    Ty& front() {
+        if(empty())
+            throw std::out_of_range("deque empty");
+        return head.empty() ? tail.front() : head.back();
+    }
     // get front elem const.Ver.
-    const Ty& front() const noexcept { return head.back(); }
+    const Ty& front() const {
+        if(empty())
+            throw std::out_of_range("deque empty");
+        return head.empty() ? tail.front() : head.back();
+    }
 
     // get back elem
-    Ty& back() noexcept { return tail.back(); }
+    Ty& back() {
+        if(empty())
+            throw std::out_of_range("deque empty");
+        return tail.empty() ? head.front() : tail.back();
+    }
     // get back elem const.Ver.
-    const Ty& back() const noexcept { return tail.back(); }
+    const Ty& back() const {
+        if(empty())
+            throw std::out_of_range("deque empty");
+        return tail.empty() ? head.front() : tail.back();
+    }
 
     // push front
     bool push_front(const Ty& elem) {
@@ -115,16 +131,15 @@ public:
         if(head.getSize() == tail.getSize()) {
             size_t sub = capacity() - size();
             if((sub << 2) < capacity()) {
-                head.reserve(head.size() * 2);
-                tail.reserve(tail.size() * 2);
+                head.reserve(head.getSize() * 2);
+                tail.reserve(tail.getSize() * 2);
             }
             return;
         }
-        else if()
 
         DynArray<Ty>* out;
         DynArray<Ty>* get;
-        if(head.getSize() > tail.getCapacity()) {
+        if(head.getSize() > tail.getSize()) {
             out = &head;
             get = &tail;
         }
@@ -134,7 +149,7 @@ public:
         }
 
         while(out->getSize() - get->getSize() > 1) {
-            get->push_front(std::move(out->front()));
+            get->push_front(out->front());
             out->pop_front();
         }
     }
@@ -165,6 +180,10 @@ public:
         tail.reserve(new_capacity >> 1);
     }
 
+    size_t head_size() const { return head.getSize(); }
+    size_t tail_size() const { return tail.getSize(); }
+    size_t head_capacity() const { return head.getCapacity(); }
+    size_t tail_capacity() const { return tail.getCapacity(); }
 };
 
 }
