@@ -93,7 +93,7 @@ public:
     }
 
     // pop front
-    void pop_front() noexcept {
+    void pop_front() {
         if(empty())
             throw std::out_of_range("deque empty()");
         if(head.empty())
@@ -104,7 +104,7 @@ public:
     }
 
     // pop back
-    void pop_back() noexcept {
+    void pop_back() {
         if(empty())
             throw std::out_of_range("deque empty()");
         if(tail.empty())
