@@ -39,10 +39,12 @@ public:
 
     explicit sNode(sNode&& other) noexcept
         : data(std::move(data)), next(std::move(other.next)) { }
+    sNode& operator=(sNode&& other) {
+        this->next = std::move(other.next);
+        this->data = std::move(other.data);
+    }
 
     ~sNode() = default;
-
-    sNode& operator=(sNode&&) = delete;
     sNode(const sNode&) = delete;
     sNode& operator=(const sNode&) = delete;
 
@@ -54,6 +56,13 @@ public:
 
     bool hasNext() const noexcept { return next != nullptr; }
 };
+
+// ==============================================
+
+template<typename Ty, typename... Args>
+std::unique_ptr<sNode<Ty>> makeSigNode(Args&&... args) {
+    return std::unique_ptr<sNode<Ty>>(new sNode<Ty>(std::forward<Args>(args)...));
+}
 
 }
 }

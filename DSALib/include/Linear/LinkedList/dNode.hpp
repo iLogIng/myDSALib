@@ -43,10 +43,15 @@ public:
 
     explicit dNode(dNode&& other) noexcept
         : data(std::move(other.data)), prev(other.prev), next(std::move(other.next)) { }
+    dNode& operator=(dNode&& other) {
+        this->data = std::move(other.data);
+        this->prev = other.prev;
+        this->next = std::move(other.next);
+        other.prev = nullptr;
+    }
 
     ~dNode() = default;
 
-    dNode& operator=(dNode&&) = delete;
     dNode(const dNode&) = delete;
     dNode& operator=(const dNode&) = delete;
 
@@ -62,6 +67,13 @@ public:
 
     bool hasNext() const noexcept { return next != nullptr; }
 };
+
+// ============================================
+
+template<typename Ty, typename... Args>
+std::unique_ptr<dNode<Ty>> makeDouNode(Args&&... args) {
+    return std::unique_ptr<dNode<Ty>>(new dNode<Ty>(args)...);
+}
 
 }
 }

@@ -131,7 +131,7 @@ public:
                 current = current->next.get();
             return *this;
         }
-        iterator& operator++(int) noexcept {
+        iterator operator++(int) noexcept {
             iterator temp = *this;
             ++(*this);
             return temp;
@@ -167,7 +167,7 @@ public:
                 current = current->next.get();
             return *this;
         }
-        const_iterator& operator++(int) noexcept {
+        const_iterator operator++(int) noexcept {
             const_iterator temp = *this;
             ++(*this);
             return temp;
@@ -203,11 +203,6 @@ public:
 };
 
 // ==========================================
-
-template<typename Ty, typename... Args>
-std::unique_ptr<sNode<Ty>> makeSigNode(Args&&... args) {
-    return std::unique_ptr<sNode<Ty>>(new sNode<Ty>(std::forward<Args>(args)...));
-}
 
 template<typename Ty>
 void SigList<Ty>::push_front(const Ty& val) {

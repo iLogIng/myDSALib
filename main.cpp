@@ -7,6 +7,8 @@
 #include "DSALib/include/Linear/Queue.hpp"
 #include "DSALib/include/Linear/DeQue.hpp"
 
+#include "DSALib/include/Tree/BST.hpp"
+
 void DSALib_Linear_StaArray_test();
 void DSALib_Linear_DynArray_test();
 void DSALib_Linear_SigList_test();
@@ -14,6 +16,8 @@ void DSALib_Linear_DouList_test();
 void DSALib_Linear_Stack_test();
 void DSALib_Linear_Queue_test();
 void DSALib_Linear_DeQue_test();
+
+void DSALib_Tree_BST_test();
 
 int main()
 {
@@ -25,7 +29,8 @@ int main()
     // DSALib_Linear_DouList_test();
     // DSALib_Linear_Stack_test();
     // DSALib_Linear_Queue_test();
-     DSALib_Linear_DeQue_test();
+    // DSALib_Linear_DeQue_test();
+    DSALib_Tree_BST_test();
 
     return 0;
 }
@@ -216,4 +221,53 @@ void DSALib_Linear_DeQue_test() {
     }
     std::cout << "empty: " << deq.empty() << std::endl;
 
+}
+
+void DSALib_Tree_BST_test() {
+    using namespace myDSALib::Tree;
+
+    std::cout << "Binary Search Tree test\n" << std::endl;
+
+    std::cout << "Tree Node test\n" << std::endl;
+
+    BiTNode<int> node(99, makeBiNode<int>(9), makeNulBiNode<int>());
+    std::cout << node.getData() << std::endl;
+    std::cout << node.hasLeft() << std::endl;
+    std::cout << node.hasRight() << std::endl;
+    std::cout << node.hasTwice() << std::endl;
+
+    std::cout << std::endl;
+    std::cout << "Tree test\n" << std::endl;
+
+    BST<int> tree(makeBiNode<int>(9));
+    tree.insert(3);
+    tree.insert(15);
+    auto ptr = tree.find(3);
+    if(ptr == nullptr) {
+        std::cout << "nullptr\n";
+    }
+    else {
+        std::cout << ptr->getData() << std::endl;
+    }
+
+    tree.insert(1);
+    tree.insert(5);
+    tree.insert(13);
+    tree.insert(18);
+
+    ptr = tree.findMin();
+    if(ptr) {
+        std::cout << "findMin() return " << ptr->getData() << std::endl;
+    }
+    ptr = tree.findMax();
+    if(ptr) {
+        std::cout << "findMax() return " << ptr->getData() << std::endl;
+    }
+
+    auto rm = tree.remove(9);
+    std::cout << "deleted data: " << rm->getData() << std::endl;
+
+    tree.clear();
+
+    return;
 }

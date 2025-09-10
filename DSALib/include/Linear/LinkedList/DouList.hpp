@@ -129,7 +129,7 @@ public:
                 current = current->next.get();
             return *this;
         }
-        iterator& operator++(int) noexcept {
+        iterator operator++(int) noexcept {
             iterator temp = *this;
             ++(*this);
             return temp;
@@ -139,7 +139,7 @@ public:
                 current = current->prev;
             return (*this);
         }
-        iterator& operator--(int) noexcept {
+        iterator operator--(int) noexcept {
             iterator temp = (*this);
             --(*this);
             return temp;
@@ -174,7 +174,7 @@ public:
                 current = current->next.get();
             return (*this);
         }
-        const_iterator& operator++(int) noexcept {
+        const_iterator operator++(int) noexcept {
             const_iterator temp = (*this);
             ++(*this);
             return temp;
@@ -184,7 +184,7 @@ public:
                 current = current->prev;
             return (*this);
         }
-        const_iterator& operator--(int) noexcept {
+        const_iterator operator--(int) noexcept {
             const_iterator temp = (*this);
             --(*this);
             return temp;
@@ -233,11 +233,6 @@ public:
 };
 
 // ==============================================
-
-template<typename Ty, typename... Args>
-std::unique_ptr<dNode<Ty>> makeDouNode(Args&&... args) {
-    return std::unique_ptr<dNode<Ty>>(new dNode<Ty>(args)...);
-}
 
 template<typename Ty>
 void DouList<Ty>::push_front(const Ty& val) {
