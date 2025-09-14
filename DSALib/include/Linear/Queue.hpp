@@ -94,6 +94,12 @@ public:
     // clear
     void clear() noexcept { queue.clear(); }
 
+    // clone
+    void clone(const DynQueue<Ty>& other) {
+        clear();
+        queue.clone(other.queue);
+    }
+
 };
 
 // ===============================================
@@ -204,6 +210,14 @@ public:
         queue.clear();
         front_idx = 0;
         back_idx = 0;
+    }
+
+    // clone
+    void clone(const StaQueue<Ty, N>& other) {
+        clear();
+        this->front_idx = other.front_idx;
+        this->back_idx = other.back_idx;
+        queue.clone(other.queue);
     }
 
 public:

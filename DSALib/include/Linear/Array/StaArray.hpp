@@ -38,7 +38,7 @@ public:
     StaArray(StaArray&& other) noexcept
         : array(other.array)
     {
-        array = nullptr;
+        other.array = nullptr;
     }
 
     StaArray& operator=(StaArray&& other) noexcept {
@@ -95,13 +95,24 @@ public:
 
     // swap
     void swap(StaArray<Ty, N> other) noexcept {
-        swap(this->array, other.array);
+        std::swap(this->array, other.array);
     }
 
     // clear
     void clear() noexcept {
         for(size_t i = 0; i < N; ++i)
             array[i].~Ty();
+    }
+
+    // clone
+    void clone(const StaArray<Ty, N>& other) {
+        if(this == &other) {
+            return;
+        }
+        clear();
+        for(size_t i = 0; i < N; ++i) {
+            array[i] = other.array[i];
+        }
     }
 
 public:

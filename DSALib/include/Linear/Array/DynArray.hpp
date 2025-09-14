@@ -139,13 +139,27 @@ public:
             array[i].~Ty();
         }
         size = 0;
+        capacity = 0;
+    }
+
+    // clone
+    void clone(const DynArray<Ty>& other) {
+        if(this == &other) {
+            return;
+        }
+        clear();
+        reserve(other.getCapacity());
+        size = other.getSize();
+        for(size_t i = 0; i < size; ++i) {
+            array[i] = other.array[i];
+        }
     }
 
     // swap the array
     void swap(DynArray& other) noexcept {
-        swap(array, other.array);
-        swap(size, other.size);
-        swap(capacity, other.capacity);
+        std::swap(array, other.array);
+        std::swap(size, other.size);
+        std::swap(capacity, other.capacity);
     }
 
     // set new capacity of array

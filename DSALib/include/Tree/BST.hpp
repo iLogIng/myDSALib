@@ -23,6 +23,9 @@ class BST
     using Node = BiTNode<Ty>;
     using pNode = Node*;
     using unique_pNode = std::unique_ptr<Node>;
+
+    using stack_t = Linear::DynStack<pNode>;
+    using queue_t = Linear::DynQueue<pNode>;
 private:
     unique_pNode root;
 public:
@@ -81,15 +84,492 @@ public:
     // clear
     void clear() noexcept;
 
-// iterator
+// Traverse Iterator
 public:
-// PreOrderIterator
+    // traverse order enum
+    enum class TraverseOrder
+    {
+        PreOrder,
+        InOrder,
+        PostOrder,
+        LevelOrder
+    };
 
-// InOrderIterator
+    // TraverseIterator Interface
+    class ITraverseIterator
+    {
+    public:
+        virtual ~ITraverseIterator() = default;
+    public:
+        virtual void advance() = 0;
+        virtual pNode getCurrent() const = 0;
+    public:
+        virtual Ty& operator*() = 0;
+        virtual const Ty& operator*() const = 0;
+        virtual ITraverseIterator& operator++() = 0;
+        virtual ITraverseIterator& operator++(int) = 0;
+        virtual bool operator==(const ITraverseIterator& other) const = 0;
+        virtual bool operator!=(const ITraverseIterator& other) const = 0;
+    };
 
-// PostOrderIterator
+    // PreTraverse
+    class PreTraverse
+        : public ITraverseIterator
+    {
+    private:
+        stack_t stack;
+        pNode current;
+    public:
+        explicit PreTraverse(pNode rnode)
+            : current(nullptr) {
+                if(rnode) {
+                    stack.push(rnode);
+                    advance();
+                }
+            }
 
-// LevelOrderIterator
+        ~PreTraverse() = default;
+
+    public:
+        void advance() override {
+            if(stack.empty()) {
+                current = nullptr;
+                return;
+            }
+
+            current = stack.top();
+            stack.pop();
+            if(current->hasRight()) {
+                stack.push(current->right());
+            }
+            if(current->hasLeft()) {
+                stack.push(current->left());
+            }
+        }
+
+        pNode getCurrent() const override {
+            return current;
+        }
+
+        Ty& operator*() override {
+            return current->getData();
+        }
+        const Ty& operator*() const override {
+            return current->getData();
+        }
+
+        ITraverseIterator& operator++() override {
+            advance();
+            return *this;
+        }
+
+        ITraverseIterator& operator++(int) override {
+            PreTraverse* tmp = new PreTraverse(nullptr);
+            tmp->stack.clone(this->stack);
+            tmp->current = this->current;
+            advance();
+            return *tmp;
+        }
+
+        bool operator==(const ITraverseIterator& other) const override {
+            return this->getCurrent() == other.getCurrent();
+        }
+
+        bool operator!=(const ITraverseIterator& other) const override {
+            return !(*this == other);
+        }
+
+    };
+
+    // InTraverse
+    class InTraverse
+        : public ITraverseIterator
+    {
+    private:
+        stack_t stack;
+        pNode current;
+    public:
+        explicit InTraverse(pNode rnode)
+            : current(nullptr) {
+                if(rnode) {
+                    pushLeftChain(rnode);
+                    advance();
+                }
+            }
+
+        ~InTraverse() = default;
+
+    private:
+        void pushLeftChain(pNode node) {
+            while(node) {
+                stack.push(node);
+                node = node->left();
+            }
+        }
+
+    public:
+        void advance() override {
+            if(stack.empty()) {
+                current = nullptr;
+                return;
+            }
+
+            current = stack.top();
+            stack.pop();
+            pushLeftChain(current->right());
+        }
+
+        pNode getCurrent() const override {
+            return current;
+        }
+
+        Ty& operator*() override {
+            return current->getData();
+        }
+        const Ty& operator*() const override {
+            return current->getData();
+        }
+        
+        ITraverseIterator& operator++() override {
+            advance();
+            return *this;
+        }
+
+        ITraverseIterator& operator++(int) override {
+            InTraverse* tmp = new InTraverse(nullptr);
+            tmp->stack.clone(this->stack);
+            tmp->current = this->current;
+            advance();
+            return *tmp;
+        }
+
+        bool operator==(const ITraverseIterator& other) const override {
+            return this->getCurrent() == other.getCurrent();
+        }
+
+        bool operator!=(const ITraverseIterator& other) const override {
+            return !(*this == other);
+        }
+
+    };
+
+    // PostTraverse
+    class PostTraverse
+        : public ITraverseIterator
+    {
+    private:
+        stack_t stack;
+        pNode current;
+        pNode lastVisited;
+    public:
+        explicit PostTraverse(pNode rnode)
+            : current(nullptr) {
+                if(rnode) {
+                    pushLeftChain(rnode);
+                    advance();
+                }
+            }
+
+        ~PostTraverse() = default;
+
+    private:
+        void pushLeftChain(pNode node) {
+            while(node) {
+                stack.push(node);
+                node = node->left();
+            }
+        }
+    public:
+        void advance() override {
+            if(stack.empty()) {
+                current = nullptr;
+                return;
+            }
+
+            while(!stack.empty()) {
+                pNode node = stack.top();
+
+                if(node->hasRight() && node->right() != lastVisited) {
+                    pushLeftChain(node->left());
+                    
+                }
+                else {
+                    stack.pop();
+                    current = node;
+                    lastVisited = node;
+                    return;
+                }
+            }
+
+            current = nullptr;
+        }
+
+        pNode getCurrent() const override {
+            return current;
+        }
+
+        Ty& operator*() override {
+            return current->getData();
+        }
+        const Ty& operator*() const override {
+            return current->getData();
+        }
+        
+        ITraverseIterator& operator++() override {
+            advance();
+            return *this;
+        }
+
+        ITraverseIterator& operator++(int) override {
+            PostTraverse* tmp = new PostTraverse(nullptr);
+            tmp->stack.clone(this->stack);
+            tmp->current = this->current;
+            advance();
+            return *tmp;
+        }
+
+        bool operator==(const ITraverseIterator& other) const override {
+            return this->getCurrent() == other.getCurrent();
+        }
+
+        bool operator!=(const ITraverseIterator& other) const override {
+            return !(*this == other);
+        }
+
+    };
+
+    // LevelTraverse
+    class LevelTraverse
+        : public ITraverseIterator
+    {
+    private:
+        queue_t queue;
+        pNode current;
+    public:
+        LevelTraverse(pNode rnode)
+            : current(nullptr) {
+                if(rnode) {
+                    queue.push(rnode);
+                    advance();
+                }
+            }
+
+        ~LevelTraverse() = default;
+
+    public:
+        void advance() override {
+            if(queue.empty()) {
+                current = nullptr;
+                return;
+            }
+
+            current = queue.front();
+            queue.pop();
+            if(current->hasLeft()) {
+                queue.push(current->left());
+            }
+            if(current->hasRight()) {
+                queue.push(current->right());
+            }
+        }
+
+        pNode getCurrent() const override {
+            return current;
+        }
+
+        Ty& operator*() override {
+            return current->getData();
+        }
+        const Ty& operator*() const override {
+            return current->getData();
+        }
+        
+        ITraverseIterator& operator++() override {
+            advance();
+            return *this;
+        }
+
+        ITraverseIterator& operator++(int) override {
+            LevelTraverse* tmp = new LevelTraverse(nullptr);
+            tmp->queue.clone(this->queue);
+            tmp->current = this->current;
+            advance();
+            return *tmp;
+        }
+
+        bool operator==(const ITraverseIterator& other) const override {
+            return this->getCurrent() == other.getCurrent();
+        }
+
+        bool operator!=(const ITraverseIterator& other) const override {
+            return !(*this == other);
+        }
+
+    };
+
+    // EndTraverseIterator
+    class EndTraverseIterator
+        : public ITraverseIterator
+    {
+    public:
+        void advance() override {}
+        pNode getCurrent() const override { return nullptr; }
+
+        Ty& operator*() override { 
+            throw std::runtime_error("Dereferencing end iterator");
+        }
+        const Ty& operator*() const override { 
+            throw std::runtime_error("Dereferencing end iterator");
+        }
+
+        ITraverseIterator& operator++() override { return *this; }
+        ITraverseIterator& operator++(int) override { return *this; }
+
+        bool operator==(const ITraverseIterator& other) const override {
+            return other.getCurrent() == nullptr;
+        }
+        bool operator!=(const ITraverseIterator& other) const override {
+            return !(*this == other);
+        }
+    };
+
+    // iterator
+    class iterator {
+    private:
+        ITraverseIterator* itr;
+    public:
+        iterator(ITraverseIterator* otr)
+            : itr(otr == nullptr ? new EndTraverseIterator() : otr) { }
+
+        ~iterator() { 
+            delete itr;
+        }
+
+        iterator(const iterator&) = delete;
+        iterator& operator=(const iterator&) = delete;
+
+        iterator(iterator&& other) noexcept
+            : itr(other.itr) {
+                other.itr = nullptr;
+            }
+
+        iterator& operator=(iterator&& other) noexcept {
+            if(this != &other) {
+                delete itr;
+                this->itr = other.itr;
+                other.itr = nullptr;
+            }
+            return *this;
+        }
+
+    public:
+        Ty& operator*() { return **itr; }
+        const Ty& operator*() const { return **itr; }
+        
+        iterator& operator++() {
+            ++*itr;
+            return *this;
+        }
+        
+        iterator operator++(int) {
+            iterator tmp = *this;
+            ++*this;
+            return tmp;
+        }
+        
+        bool operator==(const iterator& other) const {
+            if(itr->getCurrent() == nullptr && other.itr->getCurrent() == nullptr)
+                return true;
+            if(itr->getCurrent() == nullptr || other.itr->getCurrent() == nullptr)
+                return false;
+            return *itr == *(other.itr);
+        }
+        
+        bool operator!=(const iterator& other) const {
+            return !(*this == other);
+        }
+    };
+
+    // const_iterator
+    class const_iterator {
+    private:
+        ITraverseIterator* itr;
+    public:
+        const_iterator(ITraverseIterator* otr)
+            : itr(otr == nullptr ? new EndTraverseIterator() : otr) { }
+
+            ~const_iterator() {
+            delete itr;
+        }
+
+        const_iterator(const const_iterator&) = delete;
+        const_iterator& operator=(const const_iterator&) = delete;
+
+        const_iterator(const_iterator&& other) noexcept
+            : itr(other.itr) { }
+        const_iterator& operator=(const_iterator&& other) noexcept {
+            if(this != &other) {
+                delete itr;
+                this->itr = other.itr;
+                other.itr = nullptr;
+            }
+            return *this;
+        }
+    public:
+        Ty& operator*() { return **itr; }
+        const Ty& operator*() const { return **itr; }
+        
+        const_iterator& operator++() {
+            ++(*itr);
+            return *this;
+        }
+
+        const_iterator operator++(int) {
+            const_iterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+        
+        bool operator==(const const_iterator& other) const {
+            if(itr->getCurrent() == nullptr && other.itr->getCurrent() == nullptr)
+                return true;
+            if(itr->getCurrent() == nullptr || other.itr->getCurrent() == nullptr)
+            return *itr == *(other.itr);
+        }
+        
+        bool operator!=(const const_iterator& other) const {
+            return !(*this == other);
+        }
+    };
+
+public:
+    iterator begin(TraverseOrder order = TraverseOrder::InOrder) {
+        switch(order) {
+            case TraverseOrder::PreOrder    :   return iterator(new PreTraverse(root.get()));
+            case TraverseOrder::InOrder     :   return iterator(new InTraverse(root.get()));
+            case TraverseOrder::PostOrder   :   return iterator(new PostTraverse(root.get()));
+            case TraverseOrder::LevelOrder  :   return iterator(new LevelTraverse(root.get()));
+            default:    return iterator(new EndTraverseIterator());
+        }
+    }
+
+    iterator end() {
+        return iterator(new EndTraverseIterator());
+    }
+
+    const_iterator cbegin(TraverseOrder order = TraverseOrder::InOrder) {
+        switch(order) {
+            case TraverseOrder::PreOrder    :   return iterator(new PreTraverse(root.get()));
+            case TraverseOrder::InOrder     :   return iterator(new InTraverse(root.get()));
+            case TraverseOrder::PostOrder   :   return iterator(new PostTraverse(root.get()));
+            case TraverseOrder::LevelOrder  :   return iterator(new LevelTraverse(root.get()));
+            default:    return iterator(new InTraverse(root.get()));
+        }
+    }
+
+    const_iterator cend() {
+        return iterator(new EndTraverseIterator());
+    }
 
 };
 
@@ -148,15 +628,18 @@ typename BST<Ty>::unique_pNode BST<Ty>::removeNode(unique_pNode& node) {
     // has twice nodes
     pNode par = target->right();    // parent node
     if(!par->left()) {  // right sub-tree has no left sub tree
+        par->lch = std::move(target->lch);
         node = std::move(target->rch);
-        node->lch = std::move(target->lch);
         return target;
     }
     else {  // right sub-tree has left sub-tree
         while(par->left()->left())  // get min elem node's parent
             par = par->left();
         node = std::move(par->lch); // this node get the right sub-tree's min elem
+        // at this time, node has only right node.
+
         par->lch = std::move(node->rch);    // pick the node(the par->lch)'s right to par->lch
+        // at this time, node has no sub nodes.
 
         // repair node's twice sub nodes
         node->lch = std::move(target->lch);

@@ -30,7 +30,7 @@ int main()
     // DSALib_Linear_Stack_test();
     // DSALib_Linear_Queue_test();
     // DSALib_Linear_DeQue_test();
-    DSALib_Tree_BST_test();
+     DSALib_Tree_BST_test();
 
     return 0;
 }
@@ -138,12 +138,22 @@ void DSALib_Linear_Stack_test() {
     stack.push(3);
     stack.push(4);
     stack.push(5);
+
+    Stack<int, 5> sta2;
+    sta2.clone(stack);
+
     std::cout << "if full ?\n" << stack.full() << std::endl << std::endl;
     for(size_t i = 0; i < stack.capacity(); ++i) {
         std::cout << stack.top() << std::endl;
         stack.pop();
     }
     std::cout << "if empty ?\n" << stack.empty() << std::endl << std::endl;
+
+    std::cout << "if sta2 empty ?\n" << sta2.empty() << std::endl << std::endl;
+    for(size_t i = 0; i < sta2.capacity(); ++i) {
+        std::cout << sta2.top() << std::endl;
+        sta2.pop();
+    }
 
 
     std::cout << "Dynamic Stack\n" << std::endl;
@@ -155,12 +165,21 @@ void DSALib_Linear_Stack_test() {
     std::cout << "size " << dyn.size() << std::endl;
     std::cout << "if empty ?\n" << dyn.empty() << std::endl << std::endl;
     size_t size = dyn.size();
+
+    Stack<int> dyn2;
+    dyn2.clone(dyn);
+
     for(size_t i = 0; i < size; ++i) {
         std::cout << dyn.top() << std::endl;
         dyn.pop();
     }
     std::cout << "size " << dyn.size() << std::endl;
     std::cout << "if empty ?\n" << dyn.empty() << std::endl << std::endl;
+
+    for(size_t i = 0; i < size; ++i) {
+        std::cout << dyn2.top() << std::endl;
+        dyn2.pop();
+    }
 
 
     return;
@@ -187,19 +206,29 @@ void DSALib_Linear_Queue_test() {
     std::cout << "size " << dyn.size() << std::endl << std::endl;
 
     std::cout << "Static Queue\n" << std::endl;
-    Queue<int, 5> sta;
+    Queue<int, 5> que;
     for(int i = 0; i < 5; ++i) {
-        sta.push(i);
+        que.push(i);
     }
-    std::cout << "is queue empty ?\n" << sta.empty() << std::endl;
-    std::cout << "size " << sta.size() << std::endl;
-    size = sta.size();
+    std::cout << "is queue empty ?\n" << que.empty() << std::endl;
+    std::cout << "size " << que.size() << std::endl;
+    size = que.size();
+
+    Queue<int, 5> que2;
+    que2.clone(que);
+
     for(size_t i = 0; i < size; ++i) {
-        std::cout << sta.front() << std::endl;
-        sta.pop();
+        std::cout << que.front() << std::endl;
+        que.pop();
     }
-    std::cout << "is queue empty ?\n" << sta.empty() << std::endl;
-    std::cout << "size " << sta.size() << std::endl << std::endl;
+    std::cout << "is queue empty ?\n" << que.empty() << std::endl;
+    std::cout << "size " << que.size() << std::endl << std::endl;
+
+    std::cout << "size of que2 is " << que2.size() << std::endl;
+    for(size_t i = 0; i < size; ++i) {
+        std::cout << que2.front() << std::endl;
+        que2.pop();
+    }
 
 }
 
@@ -263,6 +292,20 @@ void DSALib_Tree_BST_test() {
     if(ptr) {
         std::cout << "findMax() return " << ptr->getData() << std::endl;
     }
+
+    std::cout << std::endl;
+
+    for(auto itr : tree) {
+        std::cout << itr << std::endl;
+    }
+
+    std::cout << std::endl;
+
+    for(auto itr = tree.begin(BST<int>::TraverseOrder::LevelOrder); itr != tree.end(); ++itr) {
+        std::cout << *itr << std::endl;
+    }
+
+    std::cout << std::endl;
 
     auto rm = tree.remove(9);
     std::cout << "deleted data: " << rm->getData() << std::endl;

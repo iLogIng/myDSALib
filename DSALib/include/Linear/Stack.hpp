@@ -82,6 +82,12 @@ public:
     // clear
     void clear() noexcept { stack.clear(); }
 
+    // clone
+    void clone(const DynStack<Ty>& other) {
+        clear();
+        stack.clone(other.stack);
+    }
+
 };
 
 // ================================================
@@ -175,6 +181,13 @@ public:
     void clear() noexcept {
         stack.clear();
         top_idx = static_cast<size_t>(-1);
+    }
+
+    // clone
+    void clone(const StaStack<Ty, N>& other) {
+        clear();
+        this->top_idx = other.top_idx;
+        stack.clone(other.stack);
     }
 
 public:
