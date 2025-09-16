@@ -8,6 +8,7 @@
 #include "DSALib/include/Linear/DeQue.hpp"
 
 #include "DSALib/include/Tree/BST.hpp"
+#include "DSALib/include/Tree/AVL.hpp"
 
 void DSALib_Linear_StaArray_test();
 void DSALib_Linear_DynArray_test();
@@ -18,6 +19,7 @@ void DSALib_Linear_Queue_test();
 void DSALib_Linear_DeQue_test();
 
 void DSALib_Tree_BST_test();
+void DSALib_Tree_AVL_test();
 
 int main()
 {
@@ -30,7 +32,8 @@ int main()
     // DSALib_Linear_Stack_test();
     // DSALib_Linear_Queue_test();
     // DSALib_Linear_DeQue_test();
-     DSALib_Tree_BST_test();
+    // DSALib_Tree_BST_test();
+    DSALib_Tree_AVL_test();
 
     return 0;
 }
@@ -313,4 +316,36 @@ void DSALib_Tree_BST_test() {
     tree.clear();
 
     return;
+}
+
+void DSALib_Tree_AVL_test() {
+    using namespace myDSALib::Tree;
+
+    std::cout << "Balanced Binary Search Tree test\n" << std::endl;
+
+    AVL<int> tree(makeAvlNode<int>(1));
+    tree.insert(2);
+    tree.insert(3);
+    tree.insert(4);
+    tree.insert(5);
+
+    for(int i = 6; i < 19; ++i) {
+        tree.insert(i);
+    }
+
+    std::cout << std::endl;
+    for(auto itr : tree) {
+        std::cout << itr << std::endl;
+    }
+    std::cout << std::endl;
+
+    tree.remove(4);
+
+    std::cout << std::endl;
+    auto itr = tree.begin(AVL<int>::TraverseOrder::LevelOrder);
+    for( ; itr != tree.end(); ++itr) {
+        std::cout << *itr << std::endl;
+    }
+    std::cout << std::endl;
+
 }

@@ -559,16 +559,16 @@ public:
 
     const_iterator cbegin(TraverseOrder order = TraverseOrder::InOrder) {
         switch(order) {
-            case TraverseOrder::PreOrder    :   return iterator(new PreTraverse(root.get()));
-            case TraverseOrder::InOrder     :   return iterator(new InTraverse(root.get()));
-            case TraverseOrder::PostOrder   :   return iterator(new PostTraverse(root.get()));
-            case TraverseOrder::LevelOrder  :   return iterator(new LevelTraverse(root.get()));
-            default:    return iterator(new InTraverse(root.get()));
+            case TraverseOrder::PreOrder    :   return const_iterator(new PreTraverse(root.get()));
+            case TraverseOrder::InOrder     :   return const_iterator(new InTraverse(root.get()));
+            case TraverseOrder::PostOrder   :   return const_iterator(new PostTraverse(root.get()));
+            case TraverseOrder::LevelOrder  :   return const_iterator(new LevelTraverse(root.get()));
+            default:    return const_iterator(new InTraverse(root.get()));
         }
     }
 
     const_iterator cend() {
-        return iterator(new EndTraverseIterator());
+        return const_iterator(new EndTraverseIterator());
     }
 
 };
@@ -633,8 +633,9 @@ typename BST<Ty>::unique_pNode BST<Ty>::removeNode(unique_pNode& node) {
         return target;
     }
     else {  // right sub-tree has left sub-tree
-        while(par->left()->left())  // get min elem node's parent
+        while(par->left()->left()) {  // get min elem node's parent
             par = par->left();
+        }
         node = std::move(par->lch); // this node get the right sub-tree's min elem
         // at this time, node has only right node.
 

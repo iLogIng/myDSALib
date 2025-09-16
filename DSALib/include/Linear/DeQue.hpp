@@ -124,6 +124,11 @@ public:
         tail.clear();
     }
 
+    void clone(DeQue<Ty>& other) {
+        head.clone(other.head);
+        tail.clone(other.tail);
+    }
+
 public:
 
     // rebalance the DeQue
