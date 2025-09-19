@@ -826,7 +826,7 @@ const typename AVL<Ty>::pNode AVL<Ty>::findFrom(const pNode node, const Ty& elem
         return nullptr;
     }
 
-    pNode cur = pNode;
+    pNode cur = node;
     while(cur) {
         if(cur->getData() == elem) {
             break;

@@ -83,6 +83,10 @@ public:
     void setLeft(unique_pNode& new_left) {
         lch = std::move(new_left);
     }
+    // release left child
+    pNode releaseLeft() noexcept {
+        return lch.release();
+    }
 
     // set right child
     void setRight(unique_pNode& new_right) {

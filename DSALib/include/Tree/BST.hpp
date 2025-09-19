@@ -37,7 +37,7 @@ public:
     explicit BST(BST&& other) noexcept
         : BST(std::move(other.root)) { }
     BST& operator=(BST&& other) noexcept {
-        if(this == &other) {
+        if(this != &other) {
             this->root = std::move(other.root);
         }
         return *this;
