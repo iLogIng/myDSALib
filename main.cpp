@@ -11,7 +11,7 @@
 #include "DSALib/include/Tree/AVL.hpp"
 #include "DSALib/include/Tree/RBT.hpp"
 
-#include "DSALib/util/Expression.cpp"
+#include "DSALib/include/util/Expression.hpp"
 
 void DSALib_Linear_StaArray_test();
 void DSALib_Linear_DynArray_test();

@@ -67,6 +67,15 @@ public:
     // find
     unique_pNode find(const Ty& elem);
 
+    // find from
+    pNode findFrom(pNode node, const Ty& elem);
+
+    // find Min
+    pNode findMin() const noexcept;
+
+    // find Max
+    pNode findMax() const noexcept;
+
     // clear
     void clear() {
         root.reset();
@@ -77,7 +86,7 @@ public:
 
 };
 
-// ============================================
+// Rotation ===================================
 
 template<typename Ty>
 void RBT<Ty>::Lrotation(unique_pNode& node) noexcept {
@@ -95,12 +104,72 @@ void RBT<Ty>::Rrotation(unique_pNode& node) noexcept {
     node = std::move(newRoot);
 }
 
-// ============================================
+// Find =======================================
+
+template<typename Ty>
+typename RBT<Ty>::pNode RBT<Ty>::findMin() const noexcept {
+    if(!root) {
+        return nullptr;
+    }
+
+    pNode cur = root.get();
+    while(cur->left()) {
+        cur = cur->left();
+    }
+
+    return cur;
+}
+
+template<typename Ty>
+typename RBT<Ty>::pNode RBT<Ty>::findMax() const noexcept {
+    if(!root) {
+        return nullptr;
+    }
+
+    pNode cur = root.get();
+    while(cur->right()) {
+        cur = cur->right();
+    }
+
+    return cur;
+}
+
+// Insert =====================================
 
 template<typename Ty>
 bool RBT<Ty>::insert(const Ty& elem) {
+    if(!root) {
+        root = std::move(makeTrbNode<Ty>(elem));
+        return true;
+    }
+
+    pNode cur = root.get();
+    pNode parent = nullptr;
+    while(cur) {
+        parent = cur;
+
+        if(elem < cur->getData()) {
+            cur = cur->left();
+        }
+        else if(cur->getData() < elem) {
+            cur = cur->right();
+        }
+        else {
+            break;
+        }
+    }
+
+    if(elem < parent->getData()) {
+        parent->lch = std::move(makeTrbNode<Ty>(elem));
+    }
+    else {
+        parent->rch = std::move(makeTrbNode<Ty>(elem));
+    }
+
     return true;
 };
+
+// Remove ========================================
 
 }
 }
