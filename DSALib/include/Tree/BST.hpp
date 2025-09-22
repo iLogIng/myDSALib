@@ -53,6 +53,9 @@ private:
     unique_pNode removeNode(unique_pNode& node);
 
 public:
+    // empty
+    bool empty() const noexcept { return root.get() == nullptr; }
+
     // insert
     bool insert(const Ty& elem);
 

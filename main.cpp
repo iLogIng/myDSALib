@@ -9,6 +9,9 @@
 
 #include "DSALib/include/Tree/BST.hpp"
 #include "DSALib/include/Tree/AVL.hpp"
+#include "DSALib/include/Tree/RBT.hpp"
+
+#include "DSALib/util/Expression.cpp"
 
 void DSALib_Linear_StaArray_test();
 void DSALib_Linear_DynArray_test();
@@ -20,6 +23,9 @@ void DSALib_Linear_DeQue_test();
 
 void DSALib_Tree_BST_test();
 void DSALib_Tree_AVL_test();
+void DSALib_Tree_RBT_test();
+
+void DSALib_Util_Expression();
 
 int main()
 {
@@ -33,7 +39,9 @@ int main()
     // DSALib_Linear_Queue_test();
     // DSALib_Linear_DeQue_test();
     // DSALib_Tree_BST_test();
-    DSALib_Tree_AVL_test();
+    // DSALib_Tree_AVL_test();
+    // DSALib_Tree_RBT_test();
+    DSALib_Util_Expression();
 
     return 0;
 }
@@ -348,4 +356,29 @@ void DSALib_Tree_AVL_test() {
     }
     std::cout << std::endl;
 
+}
+
+void DSALib_Tree_RBT_test() {
+    using namespace myDSALib::Tree;
+
+    std::cout << "Red Black Tree test.\n" << std::endl;
+
+    RBT<int> tree(makeTrbNode<int>(9));
+    tree.insert(4);
+    tree.insert(13);
+    tree.insert(1);
+
+}
+
+void DSALib_Util_Expression() {
+    using namespace util;
+
+    std::cout << "Expression.\n" << std::endl;
+
+    ExpressionEvaluator ee;
+    std::string str = "(0-5)+(0-9)+5.95+9*(5+9+5+9.5)";
+    std::string res = ee.infixToPostfix(str);
+
+    std::cout << "postfix:\n" << res << std::endl << std::endl;
+    std::cout << "result:\n" << ee.computePostfix(res) << std::endl << std::endl;
 }

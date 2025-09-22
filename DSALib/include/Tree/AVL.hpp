@@ -49,6 +49,9 @@ public:
     unique_pNode removeNode(unique_pNode& node);
 
 public:
+    // empty
+    bool empty() const noexcept { return root == nullptr; }
+
     // insert from node
     bool insertFrom(unique_pNode& node, const Ty& elem, bool& hightChanged);
     // insert

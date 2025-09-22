@@ -12,7 +12,7 @@ namespace Tree
  */
 
 template<typename Ty>
-class AVL;
+class RBT;
 
 template<typename Ty>
 class TrbNode
@@ -20,7 +20,7 @@ class TrbNode
     using Node = TrbNode<Ty>;
     using pNode = Node*;
     using unique_pNode = std::unique_ptr<Node>;
-    friend class AVL<Ty>;
+    friend class RBT<Ty>;
 private:
     // The node's color
     enum class Color { RED, BLACK };
@@ -32,8 +32,10 @@ private:
     Ty data;
 
 public:
-    explicit TrbNode(const Ty& elem = Ty{}, Color c = Color::RED)
+    explicit TrbNode(const Ty& elem = Ty{}, Color c = Color::BLACK)
         : data(elem), lch(nullptr), rch(nullptr), par(nullptr), color(c) { }
+    explicit TrbNode(const Ty& elem, unique_pNode& left, unique_pNode& right, pNode parent, Color col)
+        : data(elem), lch(std::move(left)), rch(std::move(right)), par(parent), color(col) { }
 
     ~TrbNode() = default;
 
@@ -92,9 +94,14 @@ public:
         data = new_data;
     }
 
-    // set color
-    void setColor(Color new_color) {
-        color = new_color;
+    // set RED
+    void setRED() {
+        color = Color::RED;
+    }
+
+    // set BLACK
+    void setBLACK() {
+        color = Color::BLACK;
     }
 
     // set parent
@@ -152,8 +159,13 @@ public:
         return lch != nullptr && rch != nullptr;
     }
     // has no child
-    bool hsaNone() noexcept {
+    bool hasNone() noexcept {
         return lch == nullptr && rch == nullptr;
+    }
+
+    // is leaf node
+    bool isLeaf() noexcept {
+        return hasNone() && color == Color::BLACK;
     }
 
 };
@@ -164,12 +176,6 @@ public:
 template<typename Ty, typename... Args>
 std::unique_ptr<TrbNode<Ty>> makeTrbNode(Args&&... args) {
     return std::unique_ptr<TrbNode<Ty>>(new TrbNode(std::forward<Args>(args)...));
-}
-
-// this func for constructing a null node 
-template<typename Ty>
-std::unique_ptr<TrbNode<Ty>> makeNulTrbNode() {
-    return std::unique_ptr<TrbNode<Ty>>(nullptr);
 }
 
 }

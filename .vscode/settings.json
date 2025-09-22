@@ -53,6 +53,7 @@
         "xutility": "cpp",
         "array": "cpp",
         "forward_list": "cpp",
-        "expected": "cpp"
+        "expected": "cpp",
+        "stack": "cpp"
     }
 }
