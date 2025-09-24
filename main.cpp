@@ -40,8 +40,8 @@ int main()
     // DSALib_Linear_DeQue_test();
     // DSALib_Tree_BST_test();
     // DSALib_Tree_AVL_test();
-    // DSALib_Tree_RBT_test();
-    DSALib_Util_Expression();
+    DSALib_Tree_RBT_test();
+    // DSALib_Util_Expression();
 
     return 0;
 }

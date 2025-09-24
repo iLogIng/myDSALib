@@ -89,6 +89,24 @@ public:
     // parent const.Ver
     const pNode parent() const { return par; }
 
+    // sibling
+    pNode sibling() {
+        if(par == nullptr)
+            return nullptr;
+        return par->left() == this ? par->right() : par->left();
+    }
+    // sibling const.Ver
+    const pNode sibling() const {
+        if(par == nullptr)
+            return nullptr;
+        return par->left() == this ? par->right() : par->left();
+    }
+
+    // uncle
+    pNode uncle() { return this->par->sibling(); }
+    // uncle const.Ver
+    const pNode uncle() const { return this->par->sibling(); }
+
     // set data
     void setData(const Ty& new_data) {
         data = new_data;
@@ -130,6 +148,11 @@ public:
     // has parent
     bool hasParent() noexcept {
         return parent != nullptr;
+    }
+
+    // has uncle
+    bool hasUncle() noexcept {
+        return uncle() != nullptr;
     }
 
     // has left
