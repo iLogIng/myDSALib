@@ -11,6 +11,8 @@
 #include <utility>
 #include <unordered_map>
 
+namespace myDSALib
+{
 namespace util
 {
 
@@ -253,4 +255,5 @@ double ExpressionEvaluator::computeInfix(const std::string& exp) {
     return computePostfix(postfix);
 }
 
+}
 }

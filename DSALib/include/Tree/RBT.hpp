@@ -211,39 +211,47 @@ typename RBT<Ty>::pNode RBT<Ty>::findMax() const noexcept {
 
 // Insert =====================================
 
+// the main operation for insert is this insertFixup
 template<typename Ty>
 void RBT<Ty>::insertFixup(pNode node) noexcept {
-    // node is not root and node's parent's color is RED
+    // this init node is a RED node
+
+    // this node is not root and node's parent is RED
     while(node != root.get() && getColor(node->parent()) == Node::Color::RED) {
-        if(node->parent() == node->parent()->parent()->left()) {
+        if(node->parent() == node->parent()->parent()->left()) {    // if parent is grand's left
             pNode uncle = node->uncle();
+            // if the uncle is a RED nodew
             if(getColor(uncle) == Node::Color::RED) {
+                // set parent and uncle as BLACK node
                 node->parent()->setBLACK();
                 uncle->setBLACK();
+                // set grand as RED node
                 node->parent()->parent()->setRED();
-                node = node->parent()->parent();
+                node = node->parent()->parent();    // climb up to fix the branch
             }
-            else {
-                if(node == node->parent()->right()) {
+            else {  // uncle is a BLACK node
+                if(node == node->parent()->right()) {   // is parent's right node, must has twice different rotation
                     node = node->parent();
                     unique_pNode& ref = getNodeRef(node);
-                    Lrotation(ref);
+                    Lrotation(ref); // set to a line
                     node = ref->left();
                 }
+                // is parent's left node
                 node->parent()->setBLACK();
                 node->parent()->parent()->setBLACK();
                 unique_pNode& ref = getNodeRef(node->parent()->parent());
                 Rrotation(ref);
-                break;
+                break;  // has perfectly Rotated
             }
         }
-        else {
+        else {  // node's parent is the left child
+            // same logic with different Rotation order
             pNode uncle = node->uncle();
             if(getColor(uncle) == Node::Color::RED) {
                 node->parent()->setBLACK();
                 uncle->setBLACK();
                 node->parent()->parent()->setRED();
-                node = node->parent()->parent();
+                node = node->parent()->parent();    // climb up to fix the branch
             }
             else {
                 if(node == node->parent()->left()) {
@@ -291,9 +299,9 @@ bool RBT<Ty>::insert(const Ty& elem) {
         }
     }
 
-    unique_pNode newNode = std::move(makeTrbNode<Ty>(elem));
+    // the init new node is RED
+    unique_pNode newNode = std::move(makeTrbNode<Ty>(elem, Node::Color::RED));
     newNode->setParent(parent);
-    newNode->setRED();
     pNode normal = newNode.get();
 
     if(elem < parent->getData()) {
@@ -312,6 +320,7 @@ bool RBT<Ty>::insert(const Ty& elem) {
 
 // template<typename Ty>
 // RBT<Ty>::unique_pNode RBT<Ty>::remove(const Ty& elem) {
+    
 //     return ;
 // }
 

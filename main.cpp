@@ -12,6 +12,7 @@
 #include "DSALib/include/Tree/RBT.hpp"
 
 #include "DSALib/include/util/Expression.hpp"
+#include "DSALib/include/util/KMP.hpp"
 
 void DSALib_Linear_StaArray_test();
 void DSALib_Linear_DynArray_test();
@@ -26,6 +27,7 @@ void DSALib_Tree_AVL_test();
 void DSALib_Tree_RBT_test();
 
 void DSALib_Util_Expression();
+void DSALib_Util_KMP();
 
 int main()
 {
@@ -40,8 +42,9 @@ int main()
     // DSALib_Linear_DeQue_test();
     // DSALib_Tree_BST_test();
     // DSALib_Tree_AVL_test();
-    DSALib_Tree_RBT_test();
+    // DSALib_Tree_RBT_test();
     // DSALib_Util_Expression();
+    DSALib_Util_KMP();
 
     return 0;
 }
@@ -371,7 +374,7 @@ void DSALib_Tree_RBT_test() {
 }
 
 void DSALib_Util_Expression() {
-    using namespace util;
+    using namespace myDSALib::util;
 
     std::cout << "Expression.\n" << std::endl;
 
@@ -381,4 +384,14 @@ void DSALib_Util_Expression() {
 
     std::cout << "postfix:\n" << res << std::endl << std::endl;
     std::cout << "result:\n" << ee.computePostfix(res) << std::endl << std::endl;
+}
+
+void DSALib_Util_KMP() {
+    using namespace myDSALib::util;
+
+    std::cout << "KMP Algorithm Test.\n" << std::endl;
+
+    StringCompare test("CBABABA", "ABA");
+
+    std::cout << test.compareIndex();
 }

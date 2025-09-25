@@ -32,7 +32,7 @@ private:
     Ty data;
 
 public:
-    explicit TrbNode(const Ty& elem = Ty{}, Color c = Color::BLACK)
+    explicit TrbNode(const Ty& elem = Ty{}, Color c = Node::Color::BLACK)
         : data(elem), lch(nullptr), rch(nullptr), par(nullptr), color(c) { }
     explicit TrbNode(const Ty& elem, unique_pNode& left, unique_pNode& right, pNode parent, Color col)
         : data(elem), lch(std::move(left)), rch(std::move(right)), par(parent), color(col) { }
