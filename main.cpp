@@ -42,9 +42,9 @@ int main()
     // DSALib_Linear_DeQue_test();
     // DSALib_Tree_BST_test();
     // DSALib_Tree_AVL_test();
-    // DSALib_Tree_RBT_test();
+     DSALib_Tree_RBT_test();
     // DSALib_Util_Expression();
-    DSALib_Util_KMP();
+    // DSALib_Util_KMP();
 
     return 0;
 }
@@ -370,6 +370,10 @@ void DSALib_Tree_RBT_test() {
     tree.insert(4);
     tree.insert(13);
     tree.insert(1);
+    for(auto itr: tree) {
+        std::cout << itr << std::endl;
+    }
+    tree.remove(13);
 
 }
 

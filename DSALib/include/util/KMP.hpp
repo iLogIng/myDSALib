@@ -59,9 +59,9 @@ public:
         : mainStr(std::move(other.mainStr)), subStr(std::move(other.subStr)), next(std::move(other.next)) { }
     StringCompare& operator=(StringCompare&& other) {
         if(this != &other) {
-            other.mainStr = std::move(this->mainStr);
-            other.subStr = std::move(this->subStr);
-            other.next = std::move(this->next);
+            this->mainStr = std::move(other.mainStr);
+            this->subStr = std::move(other.subStr);
+            this->next = std::move(other.next);
         }
         return *this;
     }
