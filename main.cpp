@@ -42,9 +42,9 @@ int main()
     // DSALib_Linear_DeQue_test();
     // DSALib_Tree_BST_test();
     // DSALib_Tree_AVL_test();
-     DSALib_Tree_RBT_test();
+    // DSALib_Tree_RBT_test();
     // DSALib_Util_Expression();
-    // DSALib_Util_KMP();
+     DSALib_Util_KMP();
 
     return 0;
 }
@@ -395,7 +395,12 @@ void DSALib_Util_KMP() {
 
     std::cout << "KMP Algorithm Test.\n" << std::endl;
 
-    StringCompare test("CBABABA", "ABA");
+    StringCompare test("CBABABAABBABCABC", "ABBABCABC");
+    auto& next = test.getNext();
+    for(int i = 0; i < next.getSize(); ++i) {
+        std::cout << next[i] << ' ';
+    }
+    std::cout << std::endl;
 
     std::cout << test.compareIndex();
 }

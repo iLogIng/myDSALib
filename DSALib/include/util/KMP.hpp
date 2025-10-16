@@ -19,8 +19,8 @@ private:
 private:
     // create next array
     void createNext() {
-        size_t len = 0;
-        size_t pos = 1;
+        size_t len = 0; // The main string pointer
+        size_t pos = 1; // The sub/comp/mod string pointer
         while(pos != subStr.size()) {
             if(subStr[pos] == subStr[len]) {
                 ++len;
@@ -30,7 +30,7 @@ private:
             else {
                 if(len != 0) {
                     len = next[len - 1];
-                }
+                }   // main string pointer back to the head
                 else {
                     next[pos] = 0;
                     ++pos;
