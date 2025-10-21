@@ -2,7 +2,11 @@
 	"InstallScripts" : 
 	[
 		"D:/CodeFile/Projects/myLibProj/myDSALib/build/cmake_install.cmake",
-		"D:/CodeFile/Projects/myLibProj/myDSALib/build/DSALib/cmake_install.cmake"
+		"D:/CodeFile/Projects/myLibProj/myDSALib/build/_deps/googletest-build/cmake_install.cmake",
+		"D:/CodeFile/Projects/myLibProj/myDSALib/build/_deps/googletest-build/googlemock/cmake_install.cmake",
+		"D:/CodeFile/Projects/myLibProj/myDSALib/build/_deps/googletest-build/googletest/cmake_install.cmake",
+		"D:/CodeFile/Projects/myLibProj/myDSALib/build/DSALib/cmake_install.cmake",
+		"D:/CodeFile/Projects/myLibProj/myDSALib/build/tests/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

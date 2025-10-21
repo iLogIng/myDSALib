@@ -10,6 +10,7 @@
 #include "DSALib/include/Tree/BST.hpp"
 #include "DSALib/include/Tree/AVL.hpp"
 #include "DSALib/include/Tree/RBT.hpp"
+#include "DSALib/include/Tree/B_Tree/BTree.hpp"
 
 #include "DSALib/include/util/Expression.hpp"
 #include "DSALib/include/util/KMP.hpp"
@@ -25,6 +26,7 @@ void DSALib_Linear_DeQue_test();
 void DSALib_Tree_BST_test();
 void DSALib_Tree_AVL_test();
 void DSALib_Tree_RBT_test();
+void DSALib_Tree_BTree_test();
 
 void DSALib_Util_Expression();
 void DSALib_Util_KMP();
@@ -266,6 +268,8 @@ void DSALib_Linear_DeQue_test() {
 
 }
 
+// ============================================================
+
 void DSALib_Tree_BST_test() {
     using namespace myDSALib::Tree;
 
@@ -376,6 +380,16 @@ void DSALib_Tree_RBT_test() {
     tree.remove(13);
 
 }
+
+void DSALib_Tree_BTree_test() {
+    using namespace myDSALib::Tree;
+
+    std::cout << "B-Tree test.\n" << std::endl;
+
+    BTree<int, 3U> b_tree;
+}
+
+// ============================================================
 
 void DSALib_Util_Expression() {
     using namespace myDSALib::util;

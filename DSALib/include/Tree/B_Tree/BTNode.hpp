@@ -12,15 +12,15 @@ namespace Tree {
  */
 
 template<typename Ty, int Order>
-class BTreeNode {
+class BTNode {
     static_assert(Order >= 3, "B-Tree order must be at least 3");
 
-public:
+private:
     static constexpr int MIN_KEYS = Order - 1;      // minimum keys
     static constexpr int MAX_KEYS = 2 * Order - 1;  // maximum keys
     static constexpr int MIN_CHILDREN = Order;      // minimum children
     static constexpr int MAX_CHILDREN = 2 * Order;  // maximum children
-    
+
     using KeyType = Ty;
     using NodePtr = std::shared_ptr<BTreeNode>;
     using KeyVector = std::vector<KeyType>;
@@ -33,13 +33,15 @@ private:
     size_t key_count_;      // key count
 
 public:
-    explicit BTreeNode(bool is_leaf = true) 
+    explicit BTNode(bool is_leaf = true) 
         : is_leaf_(is_leaf), key_count_(0) {
         keys_.reserve(MAX_KEYS);
         if (!is_leaf_) {
             children_.reserve(MAX_CHILDREN);
         }
     }
+
+    ~BTNode() = default;
 
 public:
     // if the key full
@@ -86,10 +88,10 @@ public:
     }
 
     // find key by key's reference
-    size_t find_key(const KeyType& key) const {
+    KeyVector::iterator find_key(const KeyType& key) const {
         // find the first not less than key's elem
         auto it = std::lower_bound(keys_.begin(), keys_.begin() + key_count_, key);
-        return std::distance(keys_.begin(), it);    // the quantity of elem keys before it
+        return it;
     }
 
     // split the node from middle, return pair<new_node_key,new_node>
