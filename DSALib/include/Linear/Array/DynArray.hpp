@@ -36,7 +36,7 @@ public:
         : size(init_list.size()), capacity(init_list.size())
     {
         if(size > 0) {
-            array = (Ty*)static_cast(operator new[](size * sizeof(Ty)));
+            array = (Ty*)(operator new[](size * sizeof(Ty)));
             size_t i = 0;
             for(auto& item : init_list) {
                 new (&array[i++]) Ty(item);

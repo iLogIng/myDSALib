@@ -5,6 +5,9 @@
       <FullPath>D:\CodeFile\Projects\myLibProj\myDSALib\build\Debug\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
+      <FullPath>D:\CodeFile\Projects\myLibProj\myDSALib\build\tests\Debug\myDSALib_gTest.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
       <FullPath>D:\CodeFile\Projects\myLibProj\myDSALib\build\Debug\myDSALib_main.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
