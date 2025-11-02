@@ -22,15 +22,28 @@ TEST_P(DynArrayTestSuite, InsertTest) {
 
 #if 1
 
-DynArray<int> array({0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+DynArray<int> dyn({0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
 TEST(DynArrayTestSuite, IndexTest) {
-    EXPECT_EQ(array[0], 0);
-    EXPECT_EQ(array[3], 3);
-    EXPECT_EQ(array[9], 9);
-    EXPECT_EQ(array.at(5), 5);
-    EXPECT_EQ(array.at(4), 4);
-    EXPECT_EQ(array.at(2), 2);
+    EXPECT_EQ(dyn[0], 0);
+    EXPECT_EQ(dyn[3], 3);
+    EXPECT_EQ(dyn[9], 9);
+    EXPECT_EQ(dyn.at(5), 5);
+    EXPECT_EQ(dyn.at(4), 4);
+    EXPECT_EQ(dyn.at(2), 2);
+}
+
+// ===============================================================
+
+StaArray<int, 10> sta({0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+
+TEST(StaArrayTestSuite, IndexTest) {
+    EXPECT_EQ(sta[0], 0);
+    EXPECT_EQ(sta[3], 3);
+    EXPECT_EQ(sta[9], 9);
+    EXPECT_EQ(sta.at(5), 5);
+    EXPECT_EQ(sta.at(4), 4);
+    EXPECT_EQ(sta.at(2), 2);
 }
 
 #endif

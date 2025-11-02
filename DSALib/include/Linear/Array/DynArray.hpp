@@ -195,6 +195,20 @@ public:
     template<typename... Args>
     void emplace_front(Args&&... args);
 
+    // insert the value by index
+    void insert(size_t index, const Ty& value);
+    // move the value by index
+    void insert(size_t index, Ty&& value);
+
+    // erase the value by index
+    void erase(size_t index);
+
+    // slice of [begin, end)
+    DynArray<Ty> slice(size_t begin, size_t end);
+
+    // insert range of another DynArray
+    void insert_range(size_t index, const DynArray<Ty>& other);
+
     // remove back elem
     void pop_back() noexcept;
 
@@ -243,7 +257,6 @@ void DynArray<Ty>::reserve_capacity(size_t new_capacity) {
             operator delete[](new_array);
             throw;
         }
-        new_array[i].~Ty();
     }
 
     operator delete[](array);
@@ -369,6 +382,98 @@ void DynArray<Ty>::emplace_front(Args&&... args) {
     }
     new (&array[0]) Ty(std::forward<Args>(args)...);
     ++size;
+}
+
+template<typename Ty>
+void DynArray<Ty>::insert(size_t index, const Ty& value) {
+    if(index > size) {
+        throw std::out_of_range("Index out of range");
+    }
+
+    if(size >= capacity) {
+        reserve(capacity 0 ? 1 : capacity * 2);
+    }
+
+    for(size_t i = size; i > index; --i) {
+        new (&array[i]) Ty(std::move(array[i - 1]));
+        array[i - 1].~Ty();
+    }
+
+    new (&array[index]) Ty(value);
+    ++size;
+}
+
+template<typename Ty>
+void DynArray<Ty>::insert(size_t index, Ty&& value) {
+    if(index > size) {
+        throw std::out_of_range("Index out of range");
+    }
+
+    if(size >= capacity) {
+        reserve(capacity == 0 ? 1 : capacity * 2);
+    }
+
+    for(size_t i = size; i > index; --i) {
+        new (&array[i]) Ty(std::move(array[i - 1]));
+        array[i - 1].~Ty();
+    }
+
+    new (&array[index]) Ty(std::forward<Ty>(Ty));
+    ++size;
+}
+
+template<typename Ty>
+void DynArray<Ty>::erase(size_t index) {
+    if(index > size) {
+        throw std::out_of_range("Index out of range");
+    }
+
+
+    array[index].~Ty();
+
+    for(size_t i = index; i < size; ++i) {
+        new (&array[i]) Ty(std::move(array[i + 1]));
+        array[i + 1].~Ty();
+    }
+
+    --size;
+}
+
+template<typename Ty>
+typename DynArray<Ty> DynArray<Ty>::slice(size_t begin, size_t end) {
+    if(begin > size || end > size) {
+        throw std::out_of_range("Index out of range");
+    }
+
+    DynArray<Ty> result;
+    result.reserve(end - begin);
+    for(size_t i = begin; i < end; ++i) {
+        result.push_back(array[i]);
+    }
+    return result;
+}
+
+template<typename Ty>
+void DynArray<Ty>::insert_range(size_t index, const DynArray<Ty>& other) {
+    if(index > size) {
+        throw std::out_of_range("Index out of range");
+    }
+
+    size_t new_size = size + other.size;
+    if(new_size > capacity) {
+        reserve(std::max(capacity * 2, new_size));
+    }
+
+    for(size_t i = new_size - 1; i >= index + other.size; --i) {
+        new (&array[i]) Ty(std::move(array[i - other.size]));
+        array[i - other.size].~Ty();
+    }
+
+    for (size_t i = 0; i < other.size; ++i) {
+        new (&array[index + i]) Ty(other.array[i]);
+    }
+
+    size = new_size;
 }
 
 template<typename Ty>
