@@ -3,11 +3,16 @@
 #include <memory.h>
 
 #include "../Linear/Array/DynArray.hpp"
+#include "../Linear/Queue.hpp"
+#include "../Linear/Stack.hpp"
 
 namespace myDSALib
 {
 namespace Graph
 {
+
+#define MAX_WEIGHT 2.0e16
+#define MIN_WEIGHT -2.0e16
 
 using Vertex = int;
 
@@ -121,30 +126,28 @@ public:
     virtual ~IGraph() = default;
 
 public:
-    // add the vertex
-    virtual bool add_vertex(Vertex) = 0;
-    // remove the vertex
-    virtual bool remove_vertex(Vertex) = 0;
     // has vertex
-    virtual bool has_vertex(Vertex) = 0;
+    virtual bool has_vertex(Vertex) const = 0;
     // get Vertexs
     virtual myDSALib::Linear::DynArray<Vertex> get_vertexs() const = 0;
     // count the vertexs
-    virtual size_t count_vertex() = 0;
+    virtual size_t count_vertex() const = 0;
 
+public:
     // add the edge
     virtual bool add_edge(const Edge&) = 0;
     // remove the edge
     virtual bool remove_edge(Vertex from, Vertex to) = 0;
     // has edge
-    virtual bool has_edge(Vertex from, Vertex to) = 0;
+    virtual bool has_edge(Vertex from, Vertex to) const = 0;
     // edge's weight
-    virtual Weight edge_weight(Vertex from, Vertex to) = 0;
+    virtual Weight edge_weight(Vertex from, Vertex to) const = 0;
     // get Edges
     virtual myDSALib::Linear::DynArray<Edge> get_edges() const = 0;
     // count edges
-    virtual size_t count_edge() = 0;
+    virtual size_t count_edge() const = 0;
 
+public:
     // get neighbor vertexs
     virtual myDSALib::Linear::DynArray<Vertex> get_neighbor_vertexs(Vertex v) const = 0;
     // get incident edges
@@ -152,12 +155,36 @@ public:
     // get outgoing edges
     virtual myDSALib::Linear::DynArray<Edge> get_outgoing_deges(Vertex v) const = 0;
     // get vertex's degree
-    virtual int degree(Vertex v) = 0;
+    virtual size_t degree(Vertex v) const = 0;
     // get vertex's in degree
-    virtual int in_degree(Vertex v) = 0;
+    virtual size_t in_degree(Vertex v) const = 0;
     // get vertex's out degree
-    virtual int out_degree(Vertex v) = 0;
+    virtual size_t out_degree(Vertex v) const = 0;
 
+public:
+    // breadth-first search
+    virtual void BFS(Vertex start, void (*pre)(Vertex)) const = 0;
+    // deep-first search
+    virtual void DFS(Vertex start, void (*Pre)(Vertex)) const = 0;
+
+    // Dijkstra
+    virtual myDSALib::Linear::DynArray<Vertex> Dijkstra(Vertex from, Vertex to) const = 0;
+    // // Bellman-Ford
+    // virtual void Bellman_Ford() = 0;
+    // // Floyd-Wallshall
+    // virtual void Floyd_Wallshall() = 0;
+
+    // // Prim
+    // virtual void Prim() = 0;
+    // // Kruskal
+    // virtual void Kruskal() = 0;
+
+    // // topological_sort
+    // virtual void topological_sort() = 0;
+
+    // // AOV net
+    // virtual void AOV_net() = 0;
+public:
     // clear the graph
     virtual void clear() = 0;
 

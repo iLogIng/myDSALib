@@ -1,6 +1,9 @@
-DynArrayTestSuite.IndexTest 18 0.0226948
-StaArrayTestSuite.IndexTest 14 0.0218398
+DynArrayTestSuite.IndexTest 25 0.0222669
+StaArrayTestSuite.IndexTest 21 0.0204322
 DeQueTestSuite.InsertTest 3 0.0216871
-DeQueTestSuite.PushTest 6 0.0197327
-DeQueTestSuite.PopTest 2 0.0201492
+DeQueTestSuite.PushTest 13 0.0188462
+DeQueTestSuite.PopTest 9 0.0192893
+AdjMatrixTestSuit.HasEdgeTest 6 0.0208525
+AdjMatrixTestSuit.CountTest 6 0.0249813
+AdjMatrixTestSuit.DijkstraTest 3 0.0198395
 ---

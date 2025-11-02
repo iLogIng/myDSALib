@@ -20,6 +20,11 @@ add_executable(myDSALib_gTest
     Tree/test_BTree.cpp
     Tree/test_RBT.cpp
 
+# Graph
+    Graph/test_AdjMatrix.cpp
+    Graph/test_AdjList.cpp
+    Graph/test_EdgeSet.cpp
+
 )
 
 target_link_libraries(myDSALib_gTest

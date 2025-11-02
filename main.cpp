@@ -12,6 +12,8 @@
 #include "DSALib/include/Tree/RBT.hpp"
 #include "DSALib/include/Tree/B_Tree/BTree.hpp"
 
+#include "DSALib/include/Graph/AdjMatrix.hpp"
+
 #include "DSALib/include/util/Expression.hpp"
 #include "DSALib/include/util/KMP.hpp"
 
@@ -27,6 +29,8 @@ void DSALib_Tree_BST_test();
 void DSALib_Tree_AVL_test();
 void DSALib_Tree_RBT_test();
 void DSALib_Tree_BTree_test();
+
+void DSALib_Graph_AdjMatrix_test();
 
 void DSALib_Util_Expression();
 void DSALib_Util_KMP();
@@ -46,7 +50,8 @@ int main()
     // DSALib_Tree_AVL_test();
     // DSALib_Tree_RBT_test();
     // DSALib_Util_Expression();
-     DSALib_Util_KMP();
+    // DSALib_Util_KMP();
+    DSALib_Graph_AdjMatrix_test();
 
     return 0;
 }
@@ -386,11 +391,53 @@ void DSALib_Tree_BTree_test() {
 
     std::cout << "B-Tree test.\n" << std::endl;
 
-    BTree<int, 3U> b_tree;
+    // BTree<int, 3U> b_tree;
 }
 
 // ============================================================
 
+void DSALib_Graph_AdjMatrix_test()
+{
+    using namespace myDSALib::Graph;
+
+    std::cout << "AdjMatrix test.\n" << std::endl;
+
+    IGraph* graph = new AdjMatrix(5);
+
+    graph->add_edge(Edge(0, 1, 1.1));
+    graph->add_edge(Edge(0, 2, 2.0));
+    graph->add_edge(Edge(0, 4, 0.5));
+    graph->add_edge(Edge(1, 2, 3.2));
+    graph->add_edge(Edge(1, 4, 1.2));
+    graph->add_edge(Edge(1, 3, 0.3));
+    graph->add_edge(Edge(2, 3, 1.2));
+    graph->add_edge(Edge(3, 4, 2.3));
+
+    if(graph->has_edge(0, 1) == true)
+    {
+        std::cout << "exist" << std::endl;
+    }
+
+    graph->BFS(0, [](Vertex vex) -> void{
+        std::cout << vex << " ";
+    });
+    std::cout << std::endl;
+
+    graph->DFS(0, [](Vertex vex) -> void{
+        std::cout << vex << " ";
+    });
+    std::cout << std::endl;
+
+    myDSALib::Linear::DynArray<Vertex> path = graph->Dijkstra(1, 3);
+    for(int i = 0; i < 5; ++i)
+    {
+        std::cout << path[i] << " ";
+    }
+
+    delete graph;
+}
+
+// ============================================================
 void DSALib_Util_Expression() {
     using namespace myDSALib::util;
 

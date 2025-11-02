@@ -1,3 +1,30 @@
-Start testing: Nov 02 11:22 中国标准时间
+Start testing: Nov 02 23:03 中国标准时间
 ----------------------------------------------------------
-End testing: Nov 02 11:22 中国标准时间
+7/7 Testing: AdjMatrixTestSuit.DijkstraTest
+7/7 Test: AdjMatrixTestSuit.DijkstraTest
+Command: "D:/CodeFile/Projects/myLibProj/myDSALib/build/tests/Debug/myDSALib_gTest.exe" "--gtest_filter=AdjMatrixTestSuit.DijkstraTest" "--gtest_also_run_disabled_tests"
+Directory: D:/CodeFile/Projects/myLibProj/myDSALib/build/tests
+"AdjMatrixTestSuit.DijkstraTest" start time: Nov 02 23:03 中国标准时间
+Output:
+----------------------------------------------------------
+Running main() from D:\CodeFile\Projects\myLibProj\myDSALib\build\_deps\googletest-src\googletest\src\gtest_main.cc
+Note: Google Test filter = AdjMatrixTestSuit.DijkstraTest
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AdjMatrixTestSuit
+[ RUN      ] AdjMatrixTestSuit.DijkstraTest
+[       OK ] AdjMatrixTestSuit.DijkstraTest (0 ms)
+[----------] 1 test from AdjMatrixTestSuit (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"AdjMatrixTestSuit.DijkstraTest" end time: Nov 02 23:03 中国标准时间
+"AdjMatrixTestSuit.DijkstraTest" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 02 23:03 中国标准时间
