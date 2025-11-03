@@ -14,7 +14,6 @@ class AdjMatrix
 private:
     std::unique_ptr<Weight> matrix;
     int rank;
-    Vertex vertex_count;
     Vertex edge_count;
 
     Weight& Matrix(const Vertex& from, const Vertex& to) {
@@ -28,14 +27,12 @@ public:
     {
         if(rank < 2) {
             throw std::out_of_range("Illegal rank value.");
-            return;
         }
         this->rank = rank;
 
         this->matrix.reset(new Weight[rank * rank]);
         if(!matrix.get()) {
             throw std::out_of_range("Failed to build the matrix.");
-            return;
         }
 
         for(int i = 0; i < rank; ++i)
@@ -46,7 +43,6 @@ public:
             }
         }
 
-        this->vertex_count = 0;
         this->edge_count = 0;
     }
 
@@ -57,24 +53,20 @@ public:
     {
         this->matrix = std::move(other.matrix);
         this->rank = other.rank;
-        this->vertex_count = other.vertex_count;
         this->edge_count = other.edge_count;
 
         other.rank = 0;
-        other.vertex_count = 0;
         other.edge_count = 0;
     }
     AdjMatrix& operator=(AdjMatrix&& other)
     {
-        if(&other == this)
+        if(this == &other)
         {
             this->matrix = std::move(other.matrix);
             this->rank = other.rank;
-            this->vertex_count = other.vertex_count;
             this->edge_count = other.edge_count;
 
             other.rank = 0;
-            other.vertex_count = 0;
             other.edge_count = 0;
         }
 
@@ -87,7 +79,7 @@ public:
     // get vertex count
     Vertex get_vertex_count() const
     {
-        return this->vertex_count;
+        return this->rank;
     }
     // get edge count
     Vertex get_edge_count() const
@@ -145,18 +137,7 @@ public:
 };
 
 bool AdjMatrix::has_vertex(Vertex v) const {
-    if(!this->matrix.get())
-    {
-        return false;
-    }
-    for(int i = 0; i < rank; ++i)
-    {
-        if(Matrix(v, i) != 0)
-        {
-            return true;
-        }
-    }
-    return false;
+    return 0 < v && v < rank;
 }
 
 typename myDSALib::Linear::DynArray<Vertex> AdjMatrix::get_vertexs() const {
@@ -170,39 +151,20 @@ typename myDSALib::Linear::DynArray<Vertex> AdjMatrix::get_vertexs() const {
 
     for(int i = 0; i < this->rank; ++i)
     {
-        for(int j = 0; j < rank; ++j)
-        {
-            if(Matrix(i, j) != 0)
-            {
-                vexs.push_back(Matrix(i, j));
-            }
-        }
+        vexs.push_back(i);
     }
 
     return vexs;
 }
 
 size_t AdjMatrix::count_vertex() const {
-    size_t count = 0;
 
     if(!this->matrix)
     {
         return 0;
     }
 
-    for(int i = 0; i < rank; ++i)
-    {
-        for(int j = 0; j < rank; ++j)
-        {
-            if(Matrix(i, j) != 0)
-            {
-                ++count;
-                break;
-            }
-        }
-    }
-
-    return count;
+    return this->rank;
 }
 
 bool AdjMatrix::has_edge(Vertex from, Vertex to) const
@@ -230,15 +192,6 @@ bool AdjMatrix::add_edge(const Edge& edge)
         return false;
     }
 
-    if(!has_vertex(edge.from()))
-    {
-        ++vertex_count;
-    }
-    if(!has_vertex(edge.to()))
-    {
-        ++vertex_count;
-    }
-
     Matrix(edge.from(), edge.to()) = edge.weight();
     ++edge_count;
     return true;
@@ -251,16 +204,12 @@ bool AdjMatrix::remove_edge(Vertex from, Vertex to)
         return false;
     }
 
-    Matrix(from, to) = 0.0;
+    if(Matrix(from, to) == 0.0)
+    {
+        return false;
+    }
 
-    if(!has_vertex(from))
-    {
-        --vertex_count;
-    }
-    if(!has_vertex(to))
-    {
-        --vertex_count;
-    }
+    Matrix(from, to) = 0.0;
 
     --edge_count;
     return true;
@@ -456,21 +405,25 @@ void AdjMatrix::BFS(Vertex start, void (*pre)(Vertex)) const
         return;
     }
 
+    // The visited canary to record the iterated vertex
     myDSALib::Linear::DynArray<bool> visited(this->rank, false);
 
+    // The queue to help the BFS
     myDSALib::Linear::DynQueue<Vertex> queue;
 
+    // push the start vertex into the vertex
     queue.push(start);
-    visited[start] = true;
+    visited[start] = true; // record the start vertex
     while(!queue.empty())
     {
         Vertex vex = queue.front();
-        if(pre)
+        if(pre) // the pre to operate the vertex
         {
             pre(vex);
         }
         for(int i = 0; i < rank; ++i)
         {
+            // push and record all the neighbor vertex (every out-degree) into the queue
             if(Matrix(vex, i) != 0 && !visited[i])
             {
                 queue.push(i);
@@ -502,8 +455,9 @@ void AdjMatrix::DFS(Vertex start, void (*pre)(Vertex)) const
         {
             pre(vex);
         }
-        for(int i = this->rank; i > 0; --i)
+        for(int i = this->rank - 1; i > 0; --i)
         {
+            // push and record the vertex into the stack
             if(Matrix(vex, i) != 0 && !visited[i])
             {
                 stack.push(i);
@@ -516,20 +470,22 @@ void AdjMatrix::DFS(Vertex start, void (*pre)(Vertex)) const
 typename myDSALib::Linear::DynArray<Vertex> AdjMatrix::Dijkstra(Vertex from, Vertex to) const
 {
     myDSALib::Linear::DynArray<Vertex> path(this->rank, 0);             // remain the prev node
-    myDSALib::Linear::DynArray<bool> visited(this->rank, false);
-    myDSALib::Linear::DynArray<Weight> dist(this->rank, MAX_WEIGHT);
+    myDSALib::Linear::DynArray<bool> visited(this->rank, false);        // record the visited vertex
+    myDSALib::Linear::DynArray<Weight> dist(this->rank, MAX_WEIGHT);    // the minimum dist from start to vertex(index)
 
     if(!this->matrix)
     {
         return path;
     }
 
-    dist[from] = 0;
+    dist[from] = 0; // dist self to self is 0
 
     for(int i = 0; i < this->rank - 1; ++i)
     {
-        Weight min = MAX_WEIGHT;
-        Vertex min_idx = -1;
+        Weight min = MAX_WEIGHT;    // record the minimum dist
+        Vertex min_idx = -1;        // record the minimum dist vertex
+
+        // select the minimum dist and min_idx by dist[]
         for(int v = 0; v < this->rank; ++v)
         {
             if(!visited[v] && dist[v] <= min)
@@ -539,16 +495,19 @@ typename myDSALib::Linear::DynArray<Vertex> AdjMatrix::Dijkstra(Vertex from, Ver
             }
         }
 
+        // every vertex has all been visited
         if(min_idx == -1)
         {
             break;
         }
 
+        // record the min_idx
         visited[min_idx] = true;
 
         for(int v = 0; v < this->rank; ++v)
         {
-            if(!visited[v] && Matrix(i, v) != 0 && dist[min_idx] + Matrix(min_idx, v) < dist[v])
+            // renew the dist from min_idx vertex to v vertex
+            if(!visited[v] && Matrix(min_idx, v) != 0 && dist[min_idx] + Matrix(min_idx, v) < dist[v])
             {
                 dist[v] = dist[min_idx] + Matrix(min_idx, v);
                 path[v] = min_idx;
@@ -564,7 +523,6 @@ typename myDSALib::Linear::DynArray<Vertex> AdjMatrix::Dijkstra(Vertex from, Ver
 void AdjMatrix::clear()
 {
     rank = 0;
-    vertex_count = 0;
     edge_count = 0;
     if(!this->matrix)
     {
@@ -573,5 +531,5 @@ void AdjMatrix::clear()
     this->matrix.reset();
 }
 
-}   // namespace Graph
-}   // namespace myDSALib
+} // namespace Graph
+} // namespace myDSALib

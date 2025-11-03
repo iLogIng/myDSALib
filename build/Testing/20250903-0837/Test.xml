@@ -25,39 +25,11 @@
 	ProcessorClockFrequency="2918"
 	>
 	<Testing>
-		<StartDateTime>Nov 02 23:03 [NON-UTF-8-BYTE-0xD6]й[NON-UTF-8-BYTE-0xFA][NON-UTF-8-BYTE-0xB1][NON-UTF-8-BYTE-0xEA]׼ʱ[NON-UTF-8-BYTE-0xBC][NON-UTF-8-BYTE-0xE4]</StartDateTime>
-		<StartTestTime>1762095827</StartTestTime>
-		<TestList>
-			<Test>./tests/AdjMatrixTestSuit.DijkstraTest</Test>
-		</TestList>
-		<Test Status="passed">
-			<Name>AdjMatrixTestSuit.DijkstraTest</Name>
-			<Path>./tests</Path>
-			<FullName>./tests/AdjMatrixTestSuit.DijkstraTest</FullName>
-			<FullCommandLine>D:\CodeFile\Projects\myLibProj\myDSALib\build\tests\Debug\myDSALib_gTest.exe "--gtest_filter=AdjMatrixTestSuit.DijkstraTest" "--gtest_also_run_disabled_tests"</FullCommandLine>
-			<Results>
-				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.021107</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="Processors">
-					<Value>1</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Completion Status">
-					<Value>Completed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Command Line">
-					<Value>D:\CodeFile\Projects\myLibProj\myDSALib\build\tests\Debug\myDSALib_gTest.exe "--gtest_filter=AdjMatrixTestSuit.DijkstraTest" "--gtest_also_run_disabled_tests"</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Environment">
-					<Value>#CTEST_RESOURCE_GROUP_COUNT=</Value>
-				</NamedMeasurement>
-				<Measurement>
-					<Value encoding="base64" compression="gzip">eJyVUE1PwzAMvedX+LgeWsF10g4VhR2AMbVwaqYpbb0qJU2mxOXj35O007SB0MAnP/vZfs/5oLXULfRC6lkEO2t6yOb8xjR4JxXytTUd1uR4//kgq4B8lhWpB7wapGr4tsG9460xrUJCR7Gz9QnkIwzZNtxI6pqtDOEcliMFnn0HdlIRWlhA2nSPgqz8COVikJRksnt1ZEUosHJxjA3kB+nXQOOOIP2QOz+JCSvjY2xgqUwl1NRH/Sat0T1qz0WKh/038unOH5pYCfnLCsbYXJQ88eDp/iIXZlfQu+gfSqYJIENCRexvfgmFjRvzrs+/+dsXwQqdnN/xltZpUdxmwf7ETdgX3PnBhg==</Value>
-				</Measurement>
-			</Results>
-		</Test>
-		<EndDateTime>Nov 02 23:03 [NON-UTF-8-BYTE-0xD6]й[NON-UTF-8-BYTE-0xFA][NON-UTF-8-BYTE-0xB1][NON-UTF-8-BYTE-0xEA]׼ʱ[NON-UTF-8-BYTE-0xBC][NON-UTF-8-BYTE-0xE4]</EndDateTime>
-		<EndTestTime>1762095827</EndTestTime>
+		<StartDateTime>Nov 03 16:33 [NON-UTF-8-BYTE-0xD6]й[NON-UTF-8-BYTE-0xFA][NON-UTF-8-BYTE-0xB1][NON-UTF-8-BYTE-0xEA]׼ʱ[NON-UTF-8-BYTE-0xBC][NON-UTF-8-BYTE-0xE4]</StartDateTime>
+		<StartTestTime>1762158818</StartTestTime>
+		<TestList/>
+		<EndDateTime>Nov 03 16:33 [NON-UTF-8-BYTE-0xD6]й[NON-UTF-8-BYTE-0xFA][NON-UTF-8-BYTE-0xB1][NON-UTF-8-BYTE-0xEA]׼ʱ[NON-UTF-8-BYTE-0xBC][NON-UTF-8-BYTE-0xE4]</EndDateTime>
+		<EndTestTime>1762158818</EndTestTime>
 		<ElapsedMinutes>0</ElapsedMinutes>
 	</Testing>
 </Site>

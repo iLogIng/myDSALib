@@ -55,3 +55,12 @@ TEST(AdjMatrixTestSuit, DijkstraTest)
     // EXPECT_EQ(path[3], 2);
     EXPECT_EQ(path[4], 1);
 }
+
+TEST(AdjMatrixTestSuit, DegreeTest)
+{
+    AdjMatrix matrix(5);
+    matrix.add_edge(Edge(0, 3, 1.1));
+    matrix.add_edge(Edge(1, 3, 1.3));
+    matrix.add_edge(Edge(2, 3, 0.9));
+    
+}
