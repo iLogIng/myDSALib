@@ -1,4 +1,7 @@
 #include <iostream>
+
+#define GRAPH_PRIORITY_QUEUE_VERSION
+
 #include "DSALib/include/Linear/Array/StaArray.hpp"
 #include "DSALib/include/Linear/Array/DynArray.hpp"
 #include "DSALib/include/Linear/LinkedList/SigList.hpp"
@@ -13,6 +16,8 @@
 #include "DSALib/include/Tree/B_Tree/BTree.hpp"
 
 #include "DSALib/include/Graph/AdjMatrix.hpp"
+
+#include "DSALib/include/Heap/BinaryHeap.hpp"
 
 #include "DSALib/include/util/Expression.hpp"
 #include "DSALib/include/util/KMP.hpp"
@@ -31,6 +36,8 @@ void DSALib_Tree_RBT_test();
 void DSALib_Tree_BTree_test();
 
 void DSALib_Graph_AdjMatrix_test();
+
+void DSALib_Heap_BinaryHeap_test();
 
 void DSALib_Util_Expression();
 void DSALib_Util_KMP();
@@ -52,6 +59,7 @@ int main()
     // DSALib_Util_Expression();
     // DSALib_Util_KMP();
     DSALib_Graph_AdjMatrix_test();
+    // DSALib_Heap_BinaryHeap_test();
 
     return 0;
 }
@@ -435,6 +443,26 @@ void DSALib_Graph_AdjMatrix_test()
     }
 
     delete graph;
+}
+
+// =============================================================
+
+void DSALib_Heap_BinaryHeap_test()
+{
+    using namespace myDSALib::Heap;
+
+    std::cout << "BinaryHeap test.\n" << std::endl;
+
+    BinaryHeap<int> bh;
+    for(int i = 10; i > 0; --i)
+    {
+        bh.push(i);
+    }
+
+    while(!bh.empty())
+    {
+        std::cout << bh.pop() << " ";
+    }
 }
 
 // ============================================================

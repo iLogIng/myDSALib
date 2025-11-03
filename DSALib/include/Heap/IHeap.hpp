@@ -15,6 +15,11 @@ public:
     virtual ~IHeap() = default;
 
 public:
+    // shift up
+    virtual void shift_up(size_t index) = 0;
+    // shift down
+    virtual void shift_down(size_t index) = 0;
+
     // push the elem into the heap
     virtual void push(const Ty&) = 0;
     virtual void push(Ty&&) = 0;

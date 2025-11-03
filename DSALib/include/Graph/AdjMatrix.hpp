@@ -1,7 +1,10 @@
 #include "GraphInterface.hpp"
 
 #include <iostream>
+#include <utility>
 #include <exception>
+
+#include "../Heap/PriorityQueue.hpp"
 
 namespace myDSALib
 {
@@ -467,6 +470,7 @@ void AdjMatrix::DFS(Vertex start, void (*pre)(Vertex)) const
     }
 }
 
+#ifndef GRAPH_PRIORITY_QUEUE_VERSION
 typename myDSALib::Linear::DynArray<Vertex> AdjMatrix::Dijkstra(Vertex from, Vertex to) const
 {
     myDSALib::Linear::DynArray<Vertex> path(this->rank, 0);             // remain the prev node
@@ -517,6 +521,69 @@ typename myDSALib::Linear::DynArray<Vertex> AdjMatrix::Dijkstra(Vertex from, Ver
 
     return path;
 }
+#endif
+
+#ifdef GRAPH_PRIORITY_QUEUE_VERSION
+typename myDSALib::Linear::DynArray<Vertex> AdjMatrix::Dijkstra(Vertex from, Vertex to) const
+{
+    myDSALib::Linear::DynArray<Vertex> path(this->rank, 0);             // remain the pre of vertex
+    myDSALib::Linear::DynArray<bool> visited(this->rank, false);
+    myDSALib::Linear::DynArray<Weight> dist(this->rank, MAX_WEIGHT);
+
+    if(!this->matrix)
+    {
+        return path;
+    }
+
+    using QueueElement = std::pair<Weight, Vertex>;
+    class PairCompare{
+        public:
+            bool operator()(const QueueElement& qe1, const QueueElement& qe2) const
+            {
+                return qe1.first > qe2.first;
+            }
+    };
+    myDSALib::Heap::PriorityQueue<QueueElement, PairCompare> pqueue;
+
+    dist[from] = 0;
+    pqueue.push(std::make_pair(0, from));
+
+    while(!pqueue.empty())
+    {
+        Weight cur_dist = pqueue.top().first;
+        Vertex cur_vertex = pqueue.top().second;
+        pqueue.pop();
+
+        if(visited[cur_vertex])
+        {
+            continue;
+        }
+
+        visited[cur_vertex] = true;
+
+        if(cur_vertex == to)
+        {
+            break;
+        }
+
+        for(int v = 0; v < this->rank; ++v)
+        {
+            if(Matrix(cur_vertex, v) != 0 && !visited[v])
+            {
+                Weight new_dist = cur_dist + Matrix(cur_vertex, v);
+                if(new_dist < dist[v])
+                {
+                    dist[v] = new_dist;
+                    path[v] = cur_vertex;
+                    pqueue.push(std::make_pair(new_dist, v));
+                }
+            }
+        }
+    }
+
+    return path;
+}
+#endif
 
 // ==================================================================
 
