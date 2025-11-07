@@ -418,7 +418,7 @@ void DynArray<Ty>::insert(size_t index, Ty&& value) {
         array[i - 1].~Ty();
     }
 
-    new (&array[index]) Ty(std::forward<Ty>(Ty));
+    new (&array[index]) Ty(std::forward<Ty>(value));
     ++size;
 }
 
