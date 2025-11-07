@@ -43,7 +43,7 @@ public:
         if(&other != this)
         {
             this->parent = std::move(other.parent);
-            this->rank = std::move(this->rank);
+            this->rank = std::move(other.rank);
             this->count = other.count;
             other.count = 0;
         }

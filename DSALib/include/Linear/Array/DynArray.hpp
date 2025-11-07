@@ -391,7 +391,7 @@ void DynArray<Ty>::insert(size_t index, const Ty& value) {
     }
 
     if(size >= capacity) {
-        reserve(capacity 0 ? 1 : capacity * 2);
+        reserve(capacity == 0 ? 1 : capacity * 2);
     }
 
     for(size_t i = size; i > index; --i) {
