@@ -25,13 +25,13 @@ public:
 
     PriorityQueue(PriorityQueue&& other)
     {
-        this->heap = std::move(other);
+        this->heap = std::move(other.heap);
     }
     PriorityQueue& operator=(PriorityQueue&& other)
     {
         if(this == &other)
         {
-            this->heap = std::move(other);
+            this->heap = std::move(other.heap);
         }
 
         return *this;

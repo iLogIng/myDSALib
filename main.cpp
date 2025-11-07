@@ -18,6 +18,7 @@
 #include "DSALib/include/Graph/AdjMatrix.hpp"
 
 #include "DSALib/include/Heap/BinaryHeap.hpp"
+#include "DSALib/include/Heap/PriorityQueue.hpp"
 
 #include "DSALib/include/util/Expression.hpp"
 #include "DSALib/include/util/KMP.hpp"
@@ -436,11 +437,94 @@ void DSALib_Graph_AdjMatrix_test()
     });
     std::cout << std::endl;
 
-    myDSALib::Linear::DynArray<Vertex> path = graph->Dijkstra(1, 3);
+    std::pair<myDSALib::Linear::DynArray<Vertex>, myDSALib::Linear::DynArray<Weight>> result = graph->Dijkstra(1, 3);
     for(int i = 0; i < 5; ++i)
     {
-        std::cout << path[i] << " ";
+        std::cout << result.first[i] << " ";
     }
+    std::cout << std::endl;
+    for(int i = 0; i < 5; ++i)
+    {
+        std::cout << result.second[i] << " ";
+    }
+    std::cout << std::endl;
+
+    std::pair<myDSALib::Linear::DynArray<Vertex>, myDSALib::Linear::DynArray<Weight>> bellres = graph->Bellman_Ford(1);
+    for(int i = 0; i < 5; ++i)
+    {
+        std::cout << bellres.first[i] << " ";
+    }
+    std::cout << std::endl;
+    for(int i = 0; i < 5; ++i)
+    {
+        std::cout << bellres.second[i] << " ";
+    }
+    std::cout << std::endl;
+
+    AdjMatrix und(5);
+    und.add_edge_undirected(0, 1, 1.1);
+    und.add_edge_undirected(1, 2, 0.4);
+    und.add_edge_undirected(2, 3, 1.2);
+    und.add_edge_undirected(3, 4, 0.8);
+    myDSALib::Linear::DynArray<Edge> mst;
+    // Prim algorithm
+    mst = und.Prim();
+    for(int i = 0; i < mst.getSize(); ++i)
+    {
+        std::cout << mst[i].from() << " -> " << mst[i].to() << " : " << mst[i].weight() << std::endl;
+    }
+    std::cout << std::endl;
+
+    // Kruskal algorithm
+    mst = und.Kruskal();
+    for(int i = 0; i < mst.getSize(); ++i)
+    {
+        std::cout << mst[i].from() << " -> " << mst[i].to() << " : " << mst[i].weight() << std::endl;
+    }
+    std::cout << std::endl;
+
+    AdjMatrix topo(5);
+    topo.add_edge(Edge(0, 1, 1.2));
+    topo.add_edge(Edge(1, 3, 0.7));
+    topo.add_edge(Edge(3, 2, 1.0));
+    topo.add_edge(Edge(3, 4, 0.6));
+    myDSALib::Linear::DynArray<Vertex> topsort(5);
+    // topological sort algorithm
+    topsort = topo.topological_sort();
+    for(int i = 0; i < topsort.getSize(); ++i)
+    {
+        std::cout << topsort[i] << " ";
+    }
+    std::cout << std::endl << std::endl;
+
+    AdjMatrix aoenet(5);
+    aoenet.add_edge(Edge(0, 1, 1.2));
+    aoenet.add_edge(Edge(1, 3, 0.7));
+    aoenet.add_edge(Edge(2, 4, 0.9));
+    aoenet.add_edge(Edge(3, 2, 1.0));
+    aoenet.add_edge(Edge(3, 4, 0.6));
+    // AOE_net algorithm
+    std::pair<myDSALib::Linear::DynArray<Weight>, myDSALib::Linear::DynArray<Weight>> ve_vl;
+    ve_vl = aoenet.AOE_net();
+    std::cout << "ve: ";
+    for(int i = 0; i < ve_vl.first.getSize(); ++i)
+    {
+        std::cout << ve_vl.first[i] << " ";
+    }
+    std::cout << std::endl << "vl: ";
+    for(int i = 0; i < ve_vl.second.getSize(); ++i)
+    {
+        std::cout << ve_vl.second[i] << " ";
+    }
+    std::cout << std::endl;
+
+    // critical path
+    myDSALib::Linear::DynArray<Edge> edges = aoenet.get_critical_path();
+    for(int i = 0; i < edges.getSize(); ++i)
+    {
+        std::cout << edges[i].from() << " -> " << edges[i].to() << " : " << edges[i].weight() << std::endl;
+    }
+    std::cout << std::endl;
 
     delete graph;
 }

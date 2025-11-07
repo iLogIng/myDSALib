@@ -1,22 +1,26 @@
 #pragma once
 
 #include <memory.h>
+#include <utility>
+#include <exception>
 
 #include "../Linear/Array/DynArray.hpp"
 #include "../Linear/Queue.hpp"
 #include "../Linear/Stack.hpp"
+#include "../Heap/PriorityQueue.hpp"
+#include "../DisjointSet/DisjointSet.hpp"
 
 namespace myDSALib
 {
 namespace Graph
 {
 
-#define MAX_WEIGHT 2.0e16
-#define MIN_WEIGHT -2.0e16
-
 using Vertex = int;
 
 using Weight = double;
+
+const Weight MAX_WEIGHT = 2.0e16;
+const Weight MIN_WEIGHT = -2.0e16;
 
 using Path = myDSALib::Linear::DynArray<Vertex>;
 
@@ -30,8 +34,19 @@ public:
     explicit Edge(Vertex v1, Vertex v2, Weight w = 1.0) noexcept
         : from_(v1), to_(v2), weight_(w) { }
 
-    Edge(const Edge&) = delete;
-    Edge& operator=(const Edge&) = delete;
+    Edge(const Edge& other)
+    {
+        this->from_ = other.from_;
+        this->to_ = other.to_;
+        this->weight_ = other.weight_;
+    }
+    Edge& operator=(const Edge& other)
+    {
+        this->from_ = other.from_;
+        this->to_ = other.to_;
+        this->weight_ = other.weight_;
+        return *this;
+    }
 
     explicit Edge(Edge&& other) noexcept
     {
@@ -136,6 +151,8 @@ public:
 public:
     // add the edge
     virtual bool add_edge(const Edge&) = 0;
+    // add the edge undirected
+    virtual bool add_edge_undirected(Vertex u, Vertex v, Weight w) = 0;
     // remove the edge
     virtual bool remove_edge(Vertex from, Vertex to) = 0;
     // has edge
@@ -153,7 +170,7 @@ public:
     // get incident edges
     virtual myDSALib::Linear::DynArray<Edge> get_incident_edges(Vertex v) const = 0;
     // get outgoing edges
-    virtual myDSALib::Linear::DynArray<Edge> get_outgoing_deges(Vertex v) const = 0;
+    virtual myDSALib::Linear::DynArray<Edge> get_outgoing_edges(Vertex v) const = 0;
     // get vertex's degree
     virtual size_t degree(Vertex v) const = 0;
     // get vertex's in degree
@@ -168,22 +185,34 @@ public:
     virtual void DFS(Vertex start, void (*Pre)(Vertex)) const = 0;
 
     // Dijkstra
-    virtual myDSALib::Linear::DynArray<Vertex> Dijkstra(Vertex from, Vertex to) const = 0;
-    // // Bellman-Ford
-    // virtual void Bellman_Ford() = 0;
-    // // Floyd-Wallshall
-    // virtual void Floyd_Wallshall() = 0;
+    virtual std::pair<myDSALib::Linear::DynArray<Vertex>, myDSALib::Linear::DynArray<Weight>>
+    Dijkstra(Vertex from, Vertex to) const = 0;
+    // Bellman-Ford
+    virtual std::pair<myDSALib::Linear::DynArray<Vertex>, myDSALib::Linear::DynArray<Weight>>
+    Bellman_Ford(Vertex from) const = 0;
+    // Floyd-Wallshall
+    virtual myDSALib::Linear::DynArray<Weight>
+    Floyd_Wallshall() const = 0;
 
-    // // Prim
-    // virtual void Prim() = 0;
-    // // Kruskal
-    // virtual void Kruskal() = 0;
+    // Prim
+    virtual myDSALib::Linear::DynArray<Edge>
+    Prim() const = 0;
+    // Kruskal
+    virtual myDSALib::Linear::DynArray<Edge>
+    Kruskal() const = 0;
 
-    // // topological_sort
-    // virtual void topological_sort() = 0;
+    // topological_sort
+    virtual myDSALib::Linear::DynArray<Vertex>
+    topological_sort() const = 0;
 
-    // // AOV net
-    // virtual void AOV_net() = 0;
+    // AOE net
+    virtual std::pair<myDSALib::Linear::DynArray<Weight>, myDSALib::Linear::DynArray<Weight>>
+    AOE_net() const = 0;
+
+    // critical path for AOE
+    virtual myDSALib::Linear::DynArray<Edge>
+    get_critical_path() const = 0;
+
 public:
     // clear the graph
     virtual void clear() = 0;

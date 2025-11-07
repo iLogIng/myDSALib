@@ -6,6 +6,5 @@ DeQueTestSuite.PopTest 10 0.0187805
 AdjMatrixTestSuit.HasEdgeTest 7 0.0216317
 AdjMatrixTestSuit.CountTest 7 0.0247069
 AdjMatrixTestSuit.DijkstraTest 4 0.0188687
-AdjMatrixTestSuit.DegreeTest 1 0.0195782
+AdjMatrixTestSuit.DegreeTest 2 0.0189877
 ---
-AdjMatrixTestSuit.DegreeTest

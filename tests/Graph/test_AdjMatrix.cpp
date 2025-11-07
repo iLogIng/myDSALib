@@ -48,12 +48,12 @@ TEST(AdjMatrixTestSuit, DijkstraTest)
     matrix.add_edge(Edge(2, 3, 1.0));
     matrix.add_edge(Edge(3, 4, 1.9));
 
-    myDSALib::Linear::DynArray<Vertex> path = matrix.Dijkstra(0, 4);
-    EXPECT_EQ(path[0], 0);
+    std::pair<myDSALib::Linear::DynArray<Vertex>, myDSALib::Linear::DynArray<Weight>> result = matrix.Dijkstra(0, 4);
+    EXPECT_EQ(result.first[0], 0);
     // EXPECT_EQ(path[1], 0);
     // EXPECT_EQ(path[2], 1);
     // EXPECT_EQ(path[3], 2);
-    EXPECT_EQ(path[4], 1);
+    EXPECT_EQ(result.first[4], 1);
 }
 
 TEST(AdjMatrixTestSuit, DegreeTest)

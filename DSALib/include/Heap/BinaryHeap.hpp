@@ -47,7 +47,7 @@ public:
 
     ~BinaryHeap() = default;
 
-private:
+protected:
     // parent node index
     const size_t parent(size_t index) const;
     // left node index
@@ -220,11 +220,11 @@ bool BinaryHeap<Ty, Compare>::validate() const
         size_t lch = this->left(i);
         size_t rch = this->right(i);
 
-        if(lch < this->buffer.getSize() && this->comp(this->buffer[lch], this->buffer[i]))
+        if(lch < this->buffer.getSize() && comp(this->buffer[lch], this->buffer[i]))
         {
             return false;
         }
-        if(rch < this->buffer.getSize() && this->comp(this->buffer[rch], this->buffer[i]))
+        if(rch < this->buffer.getSize() && comp(this->buffer[rch], this->buffer[i]))
         {
             return false;
         }
